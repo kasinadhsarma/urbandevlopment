@@ -1,101 +1,217 @@
-import Image from "next/image";
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { Building2, Users, BarChart3, Leaf, ArrowRight } from "lucide-react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="flex flex-col min-h-screen">
+      <header className="bg-primary text-primary-foreground py-4">
+        <div className="container mx-auto px-4 flex justify-between items-center">
+          <h1 className="text-2xl font-bold">UrbanDev AI</h1>
+          <nav>
+            <ul className="flex space-x-4">
+              <li>
+                <Link href="/auth/login" className="hover:underline">
+                  Login
+                </Link>
+              </li>
+              <li>
+                <Link href="/auth/signup" className="hover:underline">
+                  Sign Up
+                </Link>
+              </li>
+            </ul>
+          </nav>
         </div>
+      </header>
+      <main className="flex-grow container mx-auto px-4 py-8">
+        <section className="text-center mb-12">
+          <h2 className="text-4xl font-bold mb-4">Revolutionizing Urban Infrastructure</h2>
+          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+            Empowering cities with AI-driven solutions for smarter, sustainable development. Join the future of urban
+            planning today.
+          </p>
+          <div className="flex justify-center gap-4">
+            <Link href="/auth/signup" passHref>
+              <Button size="lg">
+                Get Started <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+            <Link href="#features" passHref>
+              <Button variant="outline" size="lg">
+                Learn More
+              </Button>
+            </Link>
+          </div>
+        </section>
+
+        <section id="features" className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+          <FeatureCard
+            icon={<Building2 className="h-10 w-10" />}
+            title="Smart Building Design"
+            description="Optimize building layouts and energy efficiency with AI-powered insights"
+          />
+          <FeatureCard
+            icon={<Users className="h-10 w-10" />}
+            title="Urban Planning"
+            description="Create sustainable city plans that prioritize community needs"
+          />
+          <FeatureCard
+            icon={<BarChart3 className="h-10 w-10" />}
+            title="Data-Driven Decisions"
+            description="Make informed choices based on comprehensive urban data analysis"
+          />
+          <FeatureCard
+            icon={<Leaf className="h-10 w-10" />}
+            title="Sustainability Focus"
+            description="Implement eco-friendly solutions for a greener urban future"
+          />
+        </section>
+
+        <section className="text-center mb-12">
+          <h2 className="text-3xl font-bold mb-4">How It Works</h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            <Card>
+              <CardHeader>
+                <CardTitle>1. Input City Data</CardTitle>
+              </CardHeader>
+              <CardContent>
+                Upload your city&apos;s data, including maps, demographics, and infrastructure details.
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>2. AI Analysis</CardTitle>
+              </CardHeader>
+              <CardContent>
+                Our advanced AI algorithms analyze the data to identify patterns and opportunities.
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>3. Actionable Insights</CardTitle>
+              </CardHeader>
+              <CardContent>
+                Receive detailed reports and visualizations to guide your urban development decisions.
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
+        <section className="text-center">
+          <h2 className="text-3xl font-bold mb-4">Ready to Transform Your City?</h2>
+          <p className="text-lg text-muted-foreground mb-8">
+            Join the growing network of smart cities using UrbanDev AI
+          </p>
+          <Link href="/auth/signup" passHref>
+            <Button size="lg">Start Free Trial</Button>
+          </Link>
+        </section>
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+      <footer className="bg-muted py-8">
+        <div className="container mx-auto px-4 grid md:grid-cols-4 gap-8">
+          <div>
+            <h3 className="font-bold mb-2">UrbanDev AI</h3>
+            <p className="text-sm text-muted-foreground">
+              Empowering cities with AI-driven urban development solutions.
+            </p>
+          </div>
+          <div>
+            <h4 className="font-semibold mb-2">Quick Links</h4>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link href="#" className="hover:underline">
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link href="#" className="hover:underline">
+                  Our Services
+                </Link>
+              </li>
+              <li>
+                <Link href="#" className="hover:underline">
+                  Case Studies
+                </Link>
+              </li>
+              <li>
+                <Link href="#" className="hover:underline">
+                  Contact
+                </Link>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-semibold mb-2">Resources</h4>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link href="#" className="hover:underline">
+                  Blog
+                </Link>
+              </li>
+              <li>
+                <Link href="#" className="hover:underline">
+                  Whitepapers
+                </Link>
+              </li>
+              <li>
+                <Link href="#" className="hover:underline">
+                  Webinars
+                </Link>
+              </li>
+              <li>
+                <Link href="#" className="hover:underline">
+                  FAQ
+                </Link>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-semibold mb-2">Connect With Us</h4>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link href="#" className="hover:underline">
+                  Twitter
+                </Link>
+              </li>
+              <li>
+                <Link href="#" className="hover:underline">
+                  LinkedIn
+                </Link>
+              </li>
+              <li>
+                <Link href="#" className="hover:underline">
+                  Facebook
+                </Link>
+              </li>
+              <li>
+                <Link href="#" className="hover:underline">
+                  Instagram
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div className="container mx-auto px-4 mt-8 pt-8 border-t text-center text-sm text-muted-foreground">
+          © 2023 UrbanDev AI. All rights reserved.
+        </div>
       </footer>
     </div>
-  );
+  )
 }
+
+function FeatureCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
+  return (
+    <Card className="flex flex-col items-center text-center">
+      <CardHeader>
+        <div className="mb-4 text-primary">{icon}</div>
+        <CardTitle>{title}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <CardDescription>{description}</CardDescription>
+      </CardContent>
+    </Card>
+  )
+}
+
