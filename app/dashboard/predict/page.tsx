@@ -3,9 +3,9 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 export default function Predict() {
   const [location, setLocation] = useState("")
@@ -31,23 +31,31 @@ export default function Predict() {
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="location">Location</Label>
-                <Input
-                  id="location"
-                  placeholder="Enter location (e.g., coordinates)"
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  required
-                />
+                <Select onValueChange={setLocation} required>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a location" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="downtown">Downtown</SelectItem>
+                    <SelectItem value="suburbs">Suburbs</SelectItem>
+                    <SelectItem value="industrial-area">Industrial Area</SelectItem>
+                    <SelectItem value="residential-area">Residential Area</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="timeframe">Timeframe</Label>
-                <Input
-                  id="timeframe"
-                  placeholder="Enter timeframe (e.g., 2 hours)"
-                  value={timeframe}
-                  onChange={(e) => setTimeframe(e.target.value)}
-                  required
-                />
+                <Select onValueChange={setTimeframe} required>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a timeframe" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1-hour">1 Hour</SelectItem>
+                    <SelectItem value="2-hours">2 Hours</SelectItem>
+                    <SelectItem value="4-hours">4 Hours</SelectItem>
+                    <SelectItem value="8-hours">8 Hours</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
             <Button className="w-full mt-4" type="submit">
@@ -59,4 +67,3 @@ export default function Predict() {
     </div>
   )
 }
-
