@@ -1,62 +1,61 @@
-# prediction.py
-import logging
-import pandas as pd
-import joblib
+import random
+from typing import Dict, List, Union
 
-logging.basicConfig(level=logging.INFO)
-
-def load_model(file_path):
+def predict_traffic(location: str, timeframe: str) -> Dict[str, Union[float, List[str]]]:
     """
-    Load a trained model from a file.
+    Predict traffic conditions for a given location and timeframe.
+    Currently using mock data for demonstration.
     """
-    try:
-        model = joblib.load(file_path)
-        logging.info("Model loaded successfully.")
-        return model
-    except Exception as e:
-        logging.error(f"Error loading model: {e}")
-        raise
+    # Mock predictions based on location
+    prediction_data = {
+        "downtown": {
+            "prediction": 85.0,
+            "confidence": 0.85,
+            "recommendations": [
+                "Use public transportation during peak hours",
+                "Consider alternate routes through side streets",
+                "Implement smart traffic signal timing"
+            ]
+        },
+        "suburbs": {
+            "prediction": 60.0,
+            "confidence": 0.90,
+            "recommendations": [
+                "Schedule travel outside rush hours",
+                "Use park-and-ride facilities",
+                "Consider carpooling options"
+            ]
+        },
+        "industrial-area": {
+            "prediction": 75.0,
+            "confidence": 0.80,
+            "recommendations": [
+                "Plan deliveries during off-peak hours",
+                "Use designated truck routes",
+                "Monitor real-time traffic updates"
+            ]
+        },
+        "residential-area": {
+            "prediction": 45.0,
+            "confidence": 0.95,
+            "recommendations": [
+                "Use neighborhood shortcuts wisely",
+                "Avoid school zones during peak times",
+                "Consider bicycle for short trips"
+            ]
+        }
+    }
 
-def predict_traffic(model, input_data):
-    """
-    Predict traffic flow using the trained model.
-    """
-    try:
-        # Ensure input data has the same columns as the training data
-        missing_cols = set(model.feature_names_in_) - set(input_data.columns)
-        for col in missing_cols:
-            input_data[col] = 0
-        input_data = input_data[model.feature_names_in_]
-        
-        # Make prediction
-        prediction = model.predict(input_data)
-        logging.info(f"Prediction: {prediction[0]}")
-        return prediction[0]
-    except Exception as e:
-        logging.error(f"Error making prediction: {e}")
-        raise
+    # If location not found, generate random prediction
+    if location not in prediction_data:
+        return {
+            "prediction": random.uniform(40.0, 90.0),
+            "confidence": random.uniform(0.7, 0.9),
+            "recommendations": [
+                "Monitor traffic conditions in real-time",
+                "Plan alternate routes",
+                "Allow extra time for travel"
+            ]
+        }
 
-def main():
-    try:
-        # Step 1: Load the model
-        logging.info("Loading the model...")
-        model = load_model('traffic_prediction_model.pkl')
-        
-        # Step 2: Prepare input data for prediction
-        logging.info("Preparing input data...")
-        example_data = pd.DataFrame({
-            'hour': [8],
-            'day_of_week': [1],
-            'weather_condition_rain': [0],
-            'weather_condition_snow': [0]
-        })
-        
-        # Step 3: Make prediction
-        logging.info("Making prediction...")
-        predicted_traffic = predict_traffic(model, example_data)
-        logging.info(f"Predicted Traffic Flow: {predicted_traffic}")
-    except Exception as e:
-        logging.error(f"Error in prediction pipeline: {e}")
-
-if __name__ == "__main__":
-    main()
+    return prediction_data[location]

@@ -12,6 +12,43 @@ const MapWithNoSSR = dynamic(() => import("@/components/map"), {
 
 export default function UrbanAnalysis() {
   const [selectedArea, setSelectedArea] = useState("downtown")
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [analysisData, setAnalysisData] = useState<{
+    congestion_score: number;
+    green_space_ratio: number;
+    public_transport_coverage: number;
+    optimization_suggestions: string[];
+  } | null>(null)
+
+  const handleAnalyze = async () => {
+    setIsLoading(true)
+    setError(null)
+
+    try {
+      const response = await fetch('http://localhost:8000/api/analyze-urban-area', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          area: selectedArea,
+          include_suggestions: true 
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to analyze area')
+      }
+
+      const data = await response.json()
+      setAnalysisData(data)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred')
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   return (
     <div className="container mx-auto py-10">
@@ -45,25 +82,50 @@ export default function UrbanAnalysis() {
                   <SelectItem value="industrial">Industrial</SelectItem>
                 </SelectContent>
               </Select>
-              <Button className="w-full mt-4">Analyze Selected Area</Button>
+              <Button 
+                className="w-full mt-4" 
+                onClick={handleAnalyze}
+                disabled={isLoading}
+              >
+                {isLoading ? "Analyzing..." : "Analyze Selected Area"}
+              </Button>
+              {error && (
+                <div className="mt-4 p-4 text-red-600 bg-red-50 rounded-md">
+                  {error}
+                </div>
+              )}
+              {analysisData && (
+                <div className="mt-4">
+                  <div className="mb-2">
+                    <span className="font-semibold">Congestion Score:</span> {analysisData.congestion_score.toFixed(2)}
+                  </div>
+                  <div className="mb-2">
+                    <span className="font-semibold">Green Space Ratio:</span> {(analysisData.green_space_ratio * 100).toFixed(1)}%
+                  </div>
+                  <div className="mb-2">
+                    <span className="font-semibold">Public Transport Coverage:</span> {(analysisData.public_transport_coverage * 100).toFixed(1)}%
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>Optimization Suggestions</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ul className="list-disc pl-5">
-                <li>Increase green spaces in downtown area</li>
-                <li>Optimize traffic flow on Main Street</li>
-                <li>Expand public transportation in suburban areas</li>
-              </ul>
-              <Button className="w-full mt-4">Generate Detailed Report</Button>
-            </CardContent>
-          </Card>
+          {analysisData && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Optimization Suggestions</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="list-disc pl-5">
+                  {analysisData.optimization_suggestions.map((suggestion, index) => (
+                    <li key={index}>{suggestion}</li>
+                  ))}
+                </ul>
+                <Button className="w-full mt-4">Download Detailed Report</Button>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
     </div>
   )
 }
-

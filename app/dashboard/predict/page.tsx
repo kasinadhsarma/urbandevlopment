@@ -12,16 +12,45 @@ export default function Predict() {
   const [timeframe, setTimeframe] = useState("")
   const router = useRouter()
 
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // TODO: Implement actual prediction logic
-    console.log("Prediction requested for", { location, timeframe })
-    router.push("/dashboard/result")
+    setIsLoading(true)
+    setError(null)
+
+    try {
+      const response = await fetch('http://localhost:8000/api/predict-traffic', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ location, timeframe }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to get prediction')
+      }
+
+      const data = await response.json()
+      sessionStorage.setItem('prediction_result', JSON.stringify(data))
+      router.push('/dashboard/result')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
     <div className="container mx-auto py-10">
       <h1 className="text-4xl font-bold mb-8">Traffic Prediction</h1>
+      {error && (
+        <div className="mb-4 p-4 text-red-600 bg-red-50 rounded-md">
+          {error}
+        </div>
+      )}
       <Card className="max-w-md mx-auto">
         <CardHeader>
           <CardTitle>Enter Prediction Parameters</CardTitle>
@@ -58,8 +87,8 @@ export default function Predict() {
                 </Select>
               </div>
             </div>
-            <Button className="w-full mt-4" type="submit">
-              Generate Prediction
+            <Button className="w-full mt-4" type="submit" disabled={isLoading}>
+              {isLoading ? "Generating..." : "Generate Prediction"}
             </Button>
           </form>
         </CardContent>
