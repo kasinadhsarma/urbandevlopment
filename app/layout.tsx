@@ -1,8 +1,8 @@
 "use client"
-
-import { Inter } from "next/font/google"
 import "./globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
+import { Inter } from "next/font/google"
+import { ReactNode } from "react"
+import { ThemeProvider } from "next-themes"
 import { UserProvider } from "@/app/contexts/UserContext"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -10,16 +10,14 @@ const inter = Inter({ subsets: ["latin"] })
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: ReactNode
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+      <body className={`${inter.className} min-h-screen bg-white dark:bg-gray-900 transition-colors`}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <UserProvider>
-            <div className="flex min-h-screen">
-              <main className="flex-1">{children}</main>
-            </div>
+            {children}
           </UserProvider>
         </ThemeProvider>
       </body>

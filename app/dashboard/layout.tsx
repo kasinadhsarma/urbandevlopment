@@ -1,4 +1,24 @@
+"use client"
+
 import { Navigation } from "@/components/navigation"
+import { SidebarProvider, useSidebar } from "@/app/contexts/SidebarContext"
+
+function DashboardContent({ children }: { children: React.ReactNode }) {
+  const { isOpen } = useSidebar()
+  
+  return (
+    <div className="min-h-screen bg-white dark:bg-gray-900">
+      <Navigation />
+      <div className={`transition-all duration-300 ease-in-out ${
+        isOpen ? "md:pl-64" : "md:pl-20"
+      }`}>
+        <main className="container mx-auto p-6">
+          {children}
+        </main>
+      </div>
+    </div>
+  )
+}
 
 export default function DashboardLayout({
   children,
@@ -6,10 +26,8 @@ export default function DashboardLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="flex min-h-screen">
-      <Navigation />
-      <main className="flex-1 p-8">{children}</main>
-    </div>
+    <SidebarProvider>
+      <DashboardContent>{children}</DashboardContent>
+    </SidebarProvider>
   )
 }
-

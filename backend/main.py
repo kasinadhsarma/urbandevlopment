@@ -7,16 +7,18 @@ import pandas as pd
 from ml.newpredection.prediction import predict_traffic
 from ml.urban_analysis.layout import analyze_urban_area
 from ml.trafficanalysis.trafficanalysis import TrafficAnalyzer
+from ml.sustainablitycheck.check import SustainabilityAnalyzer
 
 app = FastAPI()
 
-# Initialize traffic analyzer
+# Initialize analyzers
 traffic_analyzer = TrafficAnalyzer()
+sustainability_analyzer = SustainabilityAnalyzer()
 
 # Enable CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["*"],  # Allow all origins for development
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -57,12 +59,6 @@ class TrafficAnalysisResponse(BaseModel):
     feature_importance: Dict[str, float]
     congestion_category: str
 
-class TrafficTrendsResponse(BaseModel):
-    time_based_patterns: Dict[str, float]
-    daily_patterns: Dict[str, float]
-    weather_impact: Dict[str, float]
-    road_type_analysis: Dict[str, float]
-
 @app.post("/api/analyze-traffic", response_model=TrafficAnalysisResponse)
 async def analyze_traffic_route(request: TrafficAnalysisRequest):
     try:
@@ -78,26 +74,37 @@ async def analyze_traffic_route(request: TrafficAnalysisRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/api/traffic-trends", response_model=TrafficTrendsResponse)
-async def get_traffic_trends():
+# Sustainability Models
+class TrendData(BaseModel):
+    direction: str
+    rate: float
+
+class SustainabilityMetrics(BaseModel):
+    emissions_score: float
+    energy_efficiency: float
+    green_infrastructure: float
+    public_transport_usage: float
+    walking_cycling_score: float
+    trend_analysis: Dict[str, TrendData]
+
+@app.get("/api/sustainability-metrics", response_model=SustainabilityMetrics)
+async def get_sustainability_metrics():
     try:
-        # Use default path in analyze_trends method
-        trends = traffic_analyzer.analyze_trends()
-        
-        # Map numeric keys to strings for better display
-        weather_map = {1: "Clear", 2: "Rain", 3: "Snow", 4: "Fog"}
-        road_map = {1: "Highway", 2: "Main Street", 3: "Residential", 4: "Downtown"}
-        
-        formatted_trends = {
-            'time_based_patterns': trends['time_based_patterns'],
-            'daily_patterns': trends['daily_patterns'],
-            'weather_impact': {weather_map.get(k, k): v for k, v in trends['weather_impact'].items()},
-            'road_type_analysis': {road_map.get(k, k): v for k, v in trends['road_type_analysis'].items()}
-        }
-        
-        return TrafficTrendsResponse(**formatted_trends)
-    except FileNotFoundError as e:
-        raise HTTPException(status_code=404, detail="Traffic data file not found")
+        metrics = sustainability_analyzer.calculate_metrics()
+        return SustainabilityMetrics(**metrics)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+class SustainabilityRecommendation(BaseModel):
+    category: str
+    score: float
+    suggestions: List[str]
+
+@app.get("/api/sustainability-recommendations", response_model=List[SustainabilityRecommendation])
+async def get_sustainability_recommendations():
+    try:
+        recommendations = sustainability_analyzer.get_recommendations()
+        return [SustainabilityRecommendation(**rec) for rec in recommendations]
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

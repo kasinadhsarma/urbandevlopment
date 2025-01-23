@@ -1,28 +1,95 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+
+interface SustainabilityMetrics {
+  emissions_score: number
+  energy_efficiency: number
+  green_infrastructure: number
+  public_transport_usage: number
+  walking_cycling_score: number
+  trend_analysis: {
+    [key: string]: {
+      direction: string
+      rate: number
+    }
+  }
+}
 
 export default function Sustainability() {
-  const [carbonFootprint, setCarbonFootprint] = useState(15.2)
-  const [greenSpaceCoverage, setGreenSpaceCoverage] = useState(18)
-  const [renewableEnergy, setRenewableEnergy] = useState(30)
+  const [metrics, setMetrics] = useState<SustainabilityMetrics | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  const handleImprovement = (metric: string) => {
-    switch (metric) {
-      case "carbon":
-        setCarbonFootprint((prev) => Math.max(0, prev - 0.5))
-        break
-      case "green":
-        setGreenSpaceCoverage((prev) => Math.min(100, prev + 1))
-        break
-      case "energy":
-        setRenewableEnergy((prev) => Math.min(100, prev + 2))
-        break
+  useEffect(() => {
+    fetchSustainabilityMetrics()
+  }, [])
+
+  const fetchSustainabilityMetrics = async () => {
+    try {
+      setLoading(true)
+      setError(null)
+      const response = await fetch('http://localhost:8000/api/sustainability-metrics')
+      if (!response.ok) {
+        throw new Error('Failed to fetch sustainability metrics')
+      }
+      const data = await response.json()
+      setMetrics(data)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred')
+      console.error('Error fetching sustainability metrics:', err)
+    } finally {
+      setLoading(false)
     }
+  }
+
+  const handleRefresh = () => {
+    fetchSustainabilityMetrics()
+  }
+
+  if (loading) {
+    return (
+      <div className="container mx-auto py-10">
+        <h1 className="text-4xl font-bold mb-8">Sustainability Metrics</h1>
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {[1, 2, 3].map((i) => (
+            <Card key={i}>
+              <CardHeader>
+                <div className="h-6 bg-gray-200 rounded animate-pulse"></div>
+              </CardHeader>
+              <CardContent>
+                <div className="h-8 bg-gray-200 rounded animate-pulse mb-2"></div>
+                <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="container mx-auto py-10">
+        <Alert variant="destructive">
+          <AlertDescription>
+            {error}
+            <Button variant="outline" className="ml-4" onClick={handleRefresh}>
+              Retry
+            </Button>
+          </AlertDescription>
+        </Alert>
+      </div>
+    )
+  }
+
+  if (!metrics) {
+    return null
   }
 
   return (
@@ -40,10 +107,13 @@ export default function Sustainability() {
                 <CardTitle>Carbon Footprint</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-2xl font-bold">{carbonFootprint.toFixed(1)} tons CO2e per capita</p>
-                <Progress value={100 - (carbonFootprint / 20) * 100} className="mt-2" />
-                <Button className="mt-4" onClick={() => handleImprovement("carbon")}>
-                  Implement Reduction Strategies
+                <p className="text-2xl font-bold">{(100 - metrics.emissions_score * 100).toFixed(1)} tons CO2e per capita</p>
+                <Progress value={metrics.emissions_score * 100} className="mt-2" />
+                <p className="text-sm mt-2 text-muted-foreground">
+                  Trend: {metrics.trend_analysis.emissions?.direction || 'Stable'}
+                </p>
+                <Button className="mt-4" onClick={handleRefresh}>
+                  Refresh Data
                 </Button>
               </CardContent>
             </Card>
@@ -52,10 +122,13 @@ export default function Sustainability() {
                 <CardTitle>Green Space Coverage</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-2xl font-bold">{greenSpaceCoverage}% of total city area</p>
-                <Progress value={greenSpaceCoverage} className="mt-2" />
-                <Button className="mt-4" onClick={() => handleImprovement("green")}>
-                  Expand Green Spaces
+                <p className="text-2xl font-bold">{(metrics.green_infrastructure * 100).toFixed(1)}% of total city area</p>
+                <Progress value={metrics.green_infrastructure * 100} className="mt-2" />
+                <p className="text-sm mt-2 text-muted-foreground">
+                  Trend: {metrics.trend_analysis.green_infra?.direction || 'Stable'}
+                </p>
+                <Button className="mt-4" onClick={handleRefresh}>
+                  Refresh Data
                 </Button>
               </CardContent>
             </Card>
@@ -64,10 +137,13 @@ export default function Sustainability() {
                 <CardTitle>Renewable Energy Usage</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-2xl font-bold">{renewableEnergy}% of total energy consumption</p>
-                <Progress value={renewableEnergy} className="mt-2" />
-                <Button className="mt-4" onClick={() => handleImprovement("energy")}>
-                  Increase Renewable Sources
+                <p className="text-2xl font-bold">{(metrics.energy_efficiency * 100).toFixed(1)}% efficiency score</p>
+                <Progress value={metrics.energy_efficiency * 100} className="mt-2" />
+                <p className="text-sm mt-2 text-muted-foreground">
+                  Trend: {metrics.trend_analysis.energy?.direction || 'Stable'}
+                </p>
+                <Button className="mt-4" onClick={handleRefresh}>
+                  Refresh Data
                 </Button>
               </CardContent>
             </Card>
@@ -88,4 +164,3 @@ export default function Sustainability() {
     </div>
   )
 }
-
