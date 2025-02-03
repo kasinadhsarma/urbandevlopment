@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
@@ -143,6 +143,14 @@ function TrafficAnalysisForm() {
       <Button onClick={handleSubmit} disabled={loading}>
         {loading ? "Analyzing..." : "Analyze Traffic"}
       </Button>
+
+      {loading && (
+        <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100">
+          <div className="container py-8">
+            <h1 className="text-4xl font-bold text-slate-900">Loading...</h1>
+          </div>
+        </div>
+      )}
 
       {analysis && (
         <div className="mt-4 space-y-4">
