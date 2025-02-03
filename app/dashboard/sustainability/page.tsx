@@ -151,29 +151,115 @@ export default function Sustainability() {
           </div>
         </TabsContent>
         <TabsContent value="details">
-          <Card>
-            <CardHeader>
-              <CardTitle>Detailed Sustainability Metrics</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p>This section would contain more detailed sustainability metrics and analysis.</p>
-              <Button className="mt-4">Generate Comprehensive Report</Button>
-            </CardContent>
-          </Card>
-          <Card className="mt-6">
-            <CardHeader>
-              <CardTitle>Analysis Graphs</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Chart data={[
-                { name: 'Emissions Score', value: metrics.emissions_score },
-                { name: 'Energy Efficiency', value: metrics.energy_efficiency },
-                { name: 'Green Infrastructure', value: metrics.green_infrastructure },
-                { name: 'Public Transport Usage', value: metrics.public_transport_usage },
-                { name: 'Walking & Cycling Score', value: metrics.walking_cycling_score }
-              ]} />
-            </CardContent>
-          </Card>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Emissions & Energy</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Chart 
+                  type="line"
+                  data={[
+                    { name: 'Jan', emissions: metrics.emissions_score * 100, energy: metrics.energy_efficiency * 100 },
+                    { name: 'Feb', emissions: 75, energy: 82 },
+                    { name: 'Mar', emissions: 82, energy: 85 },
+                    { name: 'Apr', emissions: 85, energy: 88 },
+                    { name: 'May', emissions: 88, energy: 90 },
+                    { name: 'Jun', emissions: metrics.emissions_score * 100, energy: metrics.energy_efficiency * 100 }
+                  ]}
+                  metrics={['emissions', 'energy']}
+                  colors={['#ef4444', '#f59e0b']}
+                  height={300}
+                  title="6-Month Trend (%)"
+                />
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Green Infrastructure</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Chart 
+                  type="area"
+                  data={[
+                    { name: 'Parks', value: 35 },
+                    { name: 'Urban Forest', value: 25 },
+                    { name: 'Green Roofs', value: 15 },
+                    { name: 'Gardens', value: 25 }
+                  ]}
+                  metrics={['value']}
+                  colors={['#10b981']}
+                  height={300}
+                  title="Distribution (%)"
+                />
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Transport Sustainability</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Chart 
+                  type="bar"
+                  data={[
+                    { 
+                      name: 'Current Usage',
+                      public_transport: metrics.public_transport_usage * 100,
+                      walking_cycling: metrics.walking_cycling_score * 100
+                    },
+                    { 
+                      name: 'Target',
+                      public_transport: 80,
+                      walking_cycling: 70
+                    }
+                  ]}
+                  metrics={['public_transport', 'walking_cycling']}
+                  colors={['#3b82f6', '#8b5cf6']}
+                  height={300}
+                  title="Transport Metrics vs Targets (%)"
+                />
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Overall Sustainability Score</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Chart 
+                  type="area"
+                  data={[
+                    { 
+                      name: 'Score',
+                      current: (
+                        metrics.emissions_score * 100 +
+                        metrics.energy_efficiency * 100 +
+                        metrics.green_infrastructure * 100 +
+                        metrics.public_transport_usage * 100 +
+                        metrics.walking_cycling_score * 100
+                      ) / 5,
+                      target: 80
+                    }
+                  ]}
+                  metrics={['current', 'target']}
+                  colors={['#10b981', '#f59e0b']}
+                  height={300}
+                  title="Overall Performance (%)"
+                />
+                <div className="mt-4">
+                  <h4 className="font-semibold mb-2">Key Recommendations:</h4>
+                  <ul className="list-disc pl-5 space-y-1">
+                    <li>Increase renewable energy adoption</li>
+                    <li>Expand green infrastructure</li>
+                    <li>Improve public transport connectivity</li>
+                    <li>Promote cycling infrastructure</li>
+                  </ul>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
       </Tabs>
     </div>

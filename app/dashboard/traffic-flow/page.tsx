@@ -151,26 +151,83 @@ function TrafficAnalysisForm() {
             <Progress value={analysis.congestion_level * 100} className="w-full h-4 mt-2" />
             <p className="text-sm mt-1">Category: {analysis.congestion_category}</p>
           </div>
-          <div>
-            <h3 className="text-lg font-semibold">Feature Importance</h3>
-            <div className="space-y-2 mt-2">
-              {Object.entries(analysis.feature_importance).map(([feature, importance]) => (
-                <div key={feature} className="flex justify-between items-center">
-                  <span className="text-sm">{feature}</span>
-                  <Progress value={importance * 100} className="w-1/2 h-2" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Congestion Analysis</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="text-lg font-semibold">Current Congestion Level</h3>
+                    <Chart 
+                      type="area"
+                      data={[{ 
+                        name: 'Current', 
+                        value: analysis.congestion_level * 100,
+                        threshold: 75,
+                        target: 50
+                      }]}
+                      metrics={['value', 'threshold', 'target']}
+                      height={200}
+                      colors={['#ef4444', '#f59e0b', '#10b981']}
+                      title="Congestion Level (%)"
+                    />
+                  </div>
+                  <div>
+                    <p className="text-sm mt-2 font-medium">
+                      Status: <span className={`${
+                        analysis.congestion_level > 0.75 ? 'text-red-500' :
+                        analysis.congestion_level > 0.5 ? 'text-yellow-500' :
+                        'text-green-500'
+                      }`}>
+                        {analysis.congestion_category}
+                      </span>
+                    </p>
+                  </div>
                 </div>
-              ))}
-            </div>
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold">Analysis Graphs</h3>
-            <Chart data={[
-              { name: 'Congestion Level', value: analysis.congestion_level },
-              ...Object.entries(analysis.feature_importance).map(([feature, importance]) => ({
-                name: feature,
-                value: importance
-              }))
-            ]} />
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Feature Impact Analysis</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Chart 
+                  type="bar"
+                  data={Object.entries(analysis.feature_importance).map(([feature, importance]) => ({
+                    name: feature.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
+                    value: importance * 100
+                  }))}
+                  metrics={['value']}
+                  height={300}
+                  colors={['#8b5cf6']}
+                  title="Feature Importance (%)"
+                />
+              </CardContent>
+            </Card>
+
+            <Card className="md:col-span-2">
+              <CardHeader>
+                <CardTitle>Traffic Pattern Analysis</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Chart 
+                  type="line"
+                  data={[
+                    { name: 'Morning', congestion: 65, volume: 80 },
+                    { name: 'Noon', congestion: 45, volume: 60 },
+                    { name: 'Evening', congestion: 85, volume: 90 },
+                    { name: 'Night', congestion: 30, volume: 40 }
+                  ]}
+                  metrics={['congestion', 'volume']}
+                  height={300}
+                  colors={['#ef4444', '#3b82f6']}
+                  title="Daily Traffic Pattern"
+                />
+              </CardContent>
+            </Card>
           </div>
         </div>
       )}

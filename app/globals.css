@@ -2,99 +2,98 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Base Styles */
 @layer base {
   :root {
-    /* Core Colors */
-    --background: 0 0% 100%;
+    /* System Colors */
+    --background: 210 40% 98%;
     --foreground: 222.2 84% 4.9%;
-
-    /* Component Colors */
+    
+    /* Surface Colors */
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-
+    
     /* Brand Colors */
     --primary: 222.2 47.4% 11.2%;
     --primary-foreground: 210 40% 98%;
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
-
-    /* UI Colors */
+    
+    /* Interface Colors */
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
     --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
-
-    /* Status Colors */
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --success: 142.1 76.2% 36.3%;
-    --success-foreground: 210 40% 98%;
+    
+    /* Feedback Colors */
+    --success: 142 72% 29%;
+    --success-foreground: 144 70% 98%;
+    --info: 199 89% 48%;
+    --info-foreground: 200 100% 97%;
     --warning: 38 92% 50%;
-    --warning-foreground: 210 40% 98%;
-    --info: 201 96% 32%;
-    --info-foreground: 210 40% 98%;
-
-    /* Border & Input */
+    --warning-foreground: 48 96% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 84% 98%;
+    
+    /* Interactive Elements */
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
     --radius: 0.5rem;
 
-    /* Dashboard Specific */
-    --sidebar-bg: 222.2 84% 4.9%;
-    --sidebar-fg: 210 40% 98%;
-    --card-hover: 210 40% 98%;
+    /* Dashboard Theme */
+    --sidebar: 222.2 84% 4.9%;
+    --sidebar-foreground: 210 40% 98%;
     --nav-hover: 217.2 32.6% 17.5%;
     --nav-active: 222.2 47.4% 11.2%;
+    --card-hover: 210 40% 98%;
   }
 
   .dark {
-    /* Core Colors */
+    /* System Colors */
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
-
-    /* Component Colors */
-    --card: 222.2 84% 4.9%;
+    
+    /* Surface Colors */
+    --card: 217.2 32.6% 17.5%;
     --card-foreground: 210 40% 98%;
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
-
+    
     /* Brand Colors */
     --primary: 210 40% 98%;
     --primary-foreground: 222.2 47.4% 11.2%;
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
-
-    /* UI Colors */
+    
+    /* Interface Colors */
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
     --accent: 217.2 32.6% 17.5%;
     --accent-foreground: 210 40% 98%;
-
-    /* Status Colors */
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --success: 142.1 70.6% 45.3%;
-    --success-foreground: 210 40% 98%;
-    --warning: 48 96% 53%;
-    --warning-foreground: 210 40% 98%;
+    
+    /* Feedback Colors */
+    --success: 142 72% 35%;
+    --success-foreground: 144 70% 98%;
     --info: 199 89% 48%;
-    --info-foreground: 210 40% 98%;
-
-    /* Border & Input */
+    --info-foreground: 200 100% 97%;
+    --warning: 48 96% 53%;
+    --warning-foreground: 48 96% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 84% 98%;
+    
+    /* Interactive Elements */
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
 
-    /* Dashboard Specific */
-    --sidebar-bg: 222.2 47.4% 11.2%;
-    --sidebar-fg: 210 40% 98%;
-    --card-hover: 217.2 32.6% 17.5%;
+    /* Dashboard Theme */
+    --sidebar: 222.2 47.4% 11.2%;
+    --sidebar-foreground: 210 40% 98%;
     --nav-hover: 217.2 32.6% 17.5%;
     --nav-active: 210 40% 98%;
+    --card-hover: 217.2 32.6% 17.5%;
   }
 
   * {
@@ -105,71 +104,105 @@
     @apply bg-background text-foreground antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
+
+  /* Improved focus styles */
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
 }
 
-/* Component Layer */
 @layer components {
-  /* Card Variants */
+  /* Card Components */
   .card-interactive {
-    @apply hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200;
+    @apply relative overflow-hidden hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 
+    before:absolute before:inset-0 before:bg-gradient-to-br before:from-primary/5 before:to-primary/0 
+    before:opacity-0 hover:before:opacity-100 before:transition-opacity;
   }
 
   .card-gradient {
-    @apply bg-gradient-to-br from-primary/5 to-primary/10 dark:from-primary/10 dark:to-primary/20;
+    @apply bg-gradient-to-br from-primary/5 via-primary/[0.07] to-primary/10 
+    dark:from-primary/10 dark:via-primary/[0.15] dark:to-primary/20;
   }
 
-  /* Button Variants */
+  /* Button Components */
   .btn-gradient {
-    @apply bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground;
+    @apply relative bg-gradient-to-r from-primary to-primary/80 text-primary-foreground 
+    hover:from-primary/90 hover:to-primary/70 transition-all duration-200
+    active:scale-[0.98] disabled:opacity-70 disabled:pointer-events-none;
   }
 
-  /* Navigation Styles */
+  /* Navigation Components */
   .nav-link {
-    @apply flex items-center gap-2 px-3 py-2 rounded-lg transition-colors duration-200;
+    @apply flex items-center gap-2 px-3 py-2 rounded-lg transition-colors duration-200 
+    text-muted-foreground hover:text-foreground relative overflow-hidden;
   }
 
   .nav-link-active {
-    @apply bg-nav-active text-white dark:bg-white/10;
+    @apply text-primary bg-primary/10 dark:bg-primary/20 font-medium;
   }
 
   .nav-link-hover {
-    @apply hover:bg-nav-hover/50 dark:hover:bg-white/5;
+    @apply hover:bg-primary/5 dark:hover:bg-primary/10;
   }
 }
 
-/* Utility Layer */
 @layer utilities {
-  /* Text Utilities */
+  /* Typography Utilities */
   .text-balance {
     text-wrap: balance;
   }
 
   .text-gradient {
-    @apply bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-primary/80 to-primary/60;
+  }
+
+  /* Layout Utilities */
+  .center {
+    @apply flex items-center justify-center;
+  }
+
+  .stack {
+    @apply flex flex-col;
+  }
+
+  .row {
+    @apply flex flex-row;
   }
 
   /* Background Utilities */
   .bg-dashboard {
-    @apply bg-background dark:bg-[#0A0A0A];
+    @apply bg-gradient-to-b from-background to-background/95 dark:from-background dark:to-background/98;
   }
 
   .bg-blur {
-    @apply backdrop-blur-md bg-white/80 dark:bg-black/80;
+    @apply backdrop-blur-md bg-background/80 dark:bg-background/80;
   }
 
   /* Card Utilities */
   .dashboard-card {
-    @apply bg-card dark:bg-[#1A1A1A] border-border dark:border-gray-800 shadow-sm 
-    hover:shadow-md transition-all duration-200;
+    @apply bg-card border shadow-sm hover:shadow-md transition-all duration-200 
+    dark:border-border/50 dark:shadow-none dark:hover:shadow-none dark:hover:bg-card-hover;
   }
 
-  .dashboard-card-hover {
-    @apply hover:bg-card-hover dark:hover:bg-gray-800/50;
+  /* Status Utilities */
+  .status-base {
+    @apply rounded-full px-2 py-1 text-xs font-medium;
   }
 
-  /* Text Color Utilities */
-  .text-dashboard-muted {
-    @apply text-muted-foreground dark:text-gray-400;
+  .status-success {
+    @apply status-base bg-success/10 text-success dark:bg-success/20;
+  }
+
+  .status-warning {
+    @apply status-base bg-warning/10 text-warning dark:bg-warning/20;
+  }
+
+  .status-error {
+    @apply status-base bg-destructive/10 text-destructive dark:bg-destructive/20;
+  }
+
+  .status-info {
+    @apply status-base bg-info/10 text-info dark:bg-info/20;
   }
 
   /* Animation Utilities */
@@ -189,33 +222,12 @@
     @apply opacity-0 animate-in data-[state=open]:opacity-100;
   }
 
-  /* Status Utilities */
-  .status-success {
-    @apply text-success dark:text-success bg-success/10 dark:bg-success/20;
+  /* Interaction Utilities */
+  .clickable {
+    @apply cursor-pointer select-none active:scale-[0.98] transition-transform;
   }
 
-  .status-warning {
-    @apply text-warning dark:text-warning bg-warning/10 dark:bg-warning/20;
-  }
-
-  .status-error {
-    @apply text-destructive dark:text-destructive bg-destructive/10 dark:bg-destructive/20;
-  }
-
-  .status-info {
-    @apply text-info dark:text-info bg-info/10 dark:bg-info/20;
-  }
-
-  /* Layout Utilities */
-  .center {
-    @apply flex items-center justify-center;
-  }
-
-  .stack {
-    @apply flex flex-col;
-  }
-
-  .row {
-    @apply flex flex-row;
+  .pressable {
+    @apply active:scale-[0.98] transition-transform;
   }
 }

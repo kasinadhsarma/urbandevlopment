@@ -55,19 +55,102 @@ export default function UrbanAnalysis() {
   return (
     <div className="container mx-auto py-10">
       <h1 className="text-4xl font-bold mb-8">Urban Analysis</h1>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle>City Layout Map</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="h-[400px]">
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>City Layout Analysis</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2">
+              <div className="h-[400px] bg-muted rounded-lg">
                 <MapWithNoSSR />
               </div>
-            </CardContent>
-          </Card>
-        </div>
+              <div className="mt-4">
+                <Chart 
+                  type="bar"
+                  data={[
+                    { name: 'CBD', value: 85, target: 70 },
+                    { name: 'Residential', value: 45, target: 40 },
+                    { name: 'Industrial', value: 65, target: 60 },
+                    { name: 'Waterfront', value: 35, target: 30 }
+                  ]}
+                  metrics={['value', 'target']}
+                  colors={['#3b82f6', '#94a3b8']}
+                  height={200}
+                  title="Zone Activity Levels (%)"
+                />
+              </div>
+            </div>
+            <div>
+              <div className="space-y-6">
+                <Card className="bg-muted/50">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm font-medium">Urban Density</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">78%</div>
+                    <Chart 
+                      type="area"
+                      data={[
+                        { name: '2020', value: 65 },
+                        { name: '2021', value: 70 },
+                        { name: '2022', value: 72 },
+                        { name: '2023', value: 75 },
+                        { name: '2024', value: 78 }
+                      ]}
+                      metrics={['value']}
+                      colors={['#8b5cf6']}
+                      height={100}
+                    />
+                  </CardContent>
+                </Card>
+                <Card className="bg-muted/50">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm font-medium">Green Space</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">32%</div>
+                    <Chart 
+                      type="area"
+                      data={[
+                        { name: '2020', value: 25 },
+                        { name: '2021', value: 27 },
+                        { name: '2022', value: 29 },
+                        { name: '2023', value: 30 },
+                        { name: '2024', value: 32 }
+                      ]}
+                      metrics={['value']}
+                      colors={['#10b981']}
+                      height={100}
+                    />
+                  </CardContent>
+                </Card>
+                <Card className="bg-muted/50">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm font-medium">Transit Access</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">85%</div>
+                    <Chart 
+                      type="area"
+                      data={[
+                        { name: '2020', value: 75 },
+                        { name: '2021', value: 78 },
+                        { name: '2022', value: 80 },
+                        { name: '2023', value: 82 },
+                        { name: '2024', value: 85 }
+                      ]}
+                      metrics={['value']}
+                      colors={['#f59e0b']}
+                      height={100}
+                    />
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
         <div>
           <Card className="mb-6">
             <CardHeader>
@@ -100,34 +183,111 @@ export default function UrbanAnalysis() {
               )}
               {analysisData && (
                 <div className="mt-4">
-                  <Card className="mb-4">
-                    <CardHeader>
-                      <CardTitle>Analysis Results</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="mb-2">
-                        <span className="font-semibold">Congestion Score:</span> {analysisData.congestion_score.toFixed(2)}
-                      </div>
-                      <div className="mb-2">
-                        <span className="font-semibold">Green Space Ratio:</span> {(analysisData.green_space_ratio * 100).toFixed(1)}%
-                      </div>
-                      <div className="mb-2">
-                        <span className="font-semibold">Public Transport Coverage:</span> {(analysisData.public_transport_coverage * 100).toFixed(1)}%
-                      </div>
-                    </CardContent>
-                  </Card>
-                  <Card className="mb-4">
-                    <CardHeader>
-                      <CardTitle>Analysis Graphs</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <Chart data={[
-                        { name: 'Congestion Score', value: analysisData.congestion_score },
-                        { name: 'Green Space Ratio', value: analysisData.green_space_ratio },
-                        { name: 'Public Transport Coverage', value: analysisData.public_transport_coverage }
-                      ]} />
-                    </CardContent>
-                  </Card>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Congestion Analysis</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <Chart 
+                          type="area"
+                          data={[
+                            { name: 'Current', value: analysisData.congestion_score * 10, target: 5 },
+                          ]}
+                          metrics={['value', 'target']}
+                          colors={['#ef4444', '#10b981']}
+                          height={200}
+                          title="Congestion Score (0-10)"
+                        />
+                        <p className={`text-sm mt-2 font-medium ${
+                          analysisData.congestion_score > 0.7 ? 'text-red-500' :
+                          analysisData.congestion_score > 0.4 ? 'text-yellow-500' :
+                          'text-green-500'
+                        }`}>
+                          {analysisData.congestion_score > 0.7 ? 'High Congestion' :
+                           analysisData.congestion_score > 0.4 ? 'Moderate Congestion' :
+                           'Low Congestion'}
+                        </p>
+                      </CardContent>
+                    </Card>
+
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Green Space Analysis</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <Chart 
+                          type="area"
+                          data={[
+                            { name: 'Current', value: analysisData.green_space_ratio * 100, target: 30 },
+                          ]}
+                          metrics={['value', 'target']}
+                          colors={['#10b981', '#f59e0b']}
+                          height={200}
+                          title="Green Space Coverage (%)"
+                        />
+                        <p className={`text-sm mt-2 font-medium ${
+                          analysisData.green_space_ratio > 0.3 ? 'text-green-500' :
+                          analysisData.green_space_ratio > 0.15 ? 'text-yellow-500' :
+                          'text-red-500'
+                        }`}>
+                          {analysisData.green_space_ratio > 0.3 ? 'Good Green Coverage' :
+                           analysisData.green_space_ratio > 0.15 ? 'Moderate Coverage' :
+                           'Low Coverage'}
+                        </p>
+                      </CardContent>
+                    </Card>
+
+                    <Card className="md:col-span-2">
+                      <CardHeader>
+                        <CardTitle>Public Transport Coverage</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <Chart 
+                          type="line"
+                          data={[
+                            { name: 'Downtown', coverage: 85, demand: 90 },
+                            { name: 'Residential', coverage: 65, demand: 75 },
+                            { name: 'Commercial', coverage: 75, demand: 80 },
+                            { name: 'Industrial', coverage: 45, demand: 50 }
+                          ]}
+                          metrics={['coverage', 'demand']}
+                          colors={['#3b82f6', '#8b5cf6']}
+                          height={250}
+                          title="Transport Coverage vs Demand (%)"
+                        />
+                      </CardContent>
+                    </Card>
+
+                    <Card className="md:col-span-2">
+                      <CardHeader>
+                        <CardTitle>Urban Metrics Comparison</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <Chart 
+                          type="bar"
+                          data={[
+                            { 
+                              name: 'Current',
+                              congestion: analysisData.congestion_score * 10,
+                              green_space: analysisData.green_space_ratio * 100,
+                              transport: analysisData.public_transport_coverage * 100
+                            },
+                            { 
+                              name: 'Target',
+                              congestion: 5,
+                              green_space: 30,
+                              transport: 80
+                            }
+                          ]}
+                          metrics={['congestion', 'green_space', 'transport']}
+                          height={250}
+                          colors={['#ef4444', '#10b981', '#3b82f6']}
+                          title="Current vs Target Metrics"
+                        />
+                      </CardContent>
+                    </Card>
+                  </div>
                   <Card>
                     <CardHeader>
                       <CardTitle>Optimization Suggestions</CardTitle>
@@ -146,7 +306,6 @@ export default function UrbanAnalysis() {
             </CardContent>
           </Card>
         </div>
-      </div>
     </div>
   )
 }
