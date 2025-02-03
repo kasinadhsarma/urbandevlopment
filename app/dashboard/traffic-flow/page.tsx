@@ -1,14 +1,12 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Chart } from "@/components/chart"
 
 interface TrafficAnalysis {
   congestion_level: number
@@ -26,29 +24,19 @@ function TrafficAnalysisForm() {
     weather_condition: 1,
     road_type: 1
   })
-  const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = async () => {
-    if (!formData.time_of_day || !formData.day_of_week || !formData.vehicle_count || !formData.weather_condition || !formData.road_type) {
-      setError("Please fill in all fields.")
-      return
-    }
-
     setLoading(true)
-    setError(null)
     try {
       const response = await fetch('http://localhost:8000/api/analyze-traffic', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       })
-      if (!response.ok) {
-        throw new Error('Failed to analyze traffic')
-      }
       const data = await response.json()
       setAnalysis(data)
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'An error occurred')
+      console.error('Error analyzing traffic:', error)
     }
     setLoading(false)
   }
@@ -69,13 +57,6 @@ function TrafficAnalysisForm() {
 
   return (
     <div className="space-y-4">
-      {error && (
-        <Alert variant="destructive">
-          <AlertDescription>
-            {error}
-          </AlertDescription>
-        </Alert>
-      )}
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label>Time of Day (0-23)</Label>
@@ -144,14 +125,6 @@ function TrafficAnalysisForm() {
         {loading ? "Analyzing..." : "Analyze Traffic"}
       </Button>
 
-      {loading && (
-        <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100">
-          <div className="container py-8">
-            <h1 className="text-4xl font-bold text-slate-900">Loading...</h1>
-          </div>
-        </div>
-      )}
-
       {analysis && (
         <div className="mt-4 space-y-4">
           <div>
@@ -159,83 +132,16 @@ function TrafficAnalysisForm() {
             <Progress value={analysis.congestion_level * 100} className="w-full h-4 mt-2" />
             <p className="text-sm mt-1">Category: {analysis.congestion_category}</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Congestion Analysis</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="text-lg font-semibold">Current Congestion Level</h3>
-                    <Chart 
-                      type="area"
-                      data={[{ 
-                        name: 'Current', 
-                        value: analysis.congestion_level * 100,
-                        threshold: 75,
-                        target: 50
-                      }]}
-                      metrics={['value', 'threshold', 'target']}
-                      height={200}
-                      colors={['#ef4444', '#f59e0b', '#10b981']}
-                      title="Congestion Level (%)"
-                    />
-                  </div>
-                  <div>
-                    <p className="text-sm mt-2 font-medium">
-                      Status: <span className={`${
-                        analysis.congestion_level > 0.75 ? 'text-red-500' :
-                        analysis.congestion_level > 0.5 ? 'text-yellow-500' :
-                        'text-green-500'
-                      }`}>
-                        {analysis.congestion_category}
-                      </span>
-                    </p>
-                  </div>
+          <div>
+            <h3 className="text-lg font-semibold">Feature Importance</h3>
+            <div className="space-y-2 mt-2">
+              {Object.entries(analysis.feature_importance).map(([feature, importance]) => (
+                <div key={feature} className="flex justify-between items-center">
+                  <span className="text-sm">{feature}</span>
+                  <Progress value={importance * 100} className="w-1/2 h-2" />
                 </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Feature Impact Analysis</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Chart 
-                  type="bar"
-                  data={Object.entries(analysis.feature_importance).map(([feature, importance]) => ({
-                    name: feature.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
-                    value: importance * 100
-                  }))}
-                  metrics={['value']}
-                  height={300}
-                  colors={['#8b5cf6']}
-                  title="Feature Importance (%)"
-                />
-              </CardContent>
-            </Card>
-
-            <Card className="md:col-span-2">
-              <CardHeader>
-                <CardTitle>Traffic Pattern Analysis</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Chart 
-                  type="line"
-                  data={[
-                    { name: 'Morning', congestion: 65, volume: 80 },
-                    { name: 'Noon', congestion: 45, volume: 60 },
-                    { name: 'Evening', congestion: 85, volume: 90 },
-                    { name: 'Night', congestion: 30, volume: 40 }
-                  ]}
-                  metrics={['congestion', 'volume']}
-                  height={300}
-                  colors={['#ef4444', '#3b82f6']}
-                  title="Daily Traffic Pattern"
-                />
-              </CardContent>
-            </Card>
+              ))}
+            </div>
           </div>
         </div>
       )}

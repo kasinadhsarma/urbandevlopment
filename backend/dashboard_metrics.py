@@ -3,7 +3,9 @@ import random
 
 class DashboardMetrics:
     @staticmethod
-    def generate_time_series(days=7):
+    def fetch_time_series(days=7):
+        """Fetch historical time series data from a data source"""
+        # Placeholder: Replace with actual data fetching logic
         data = []
         base = datetime.now()
         for i in range(days):
@@ -38,7 +40,7 @@ class DashboardMetrics:
                 "green_coverage": random.randint(25, 35),
                 "emissions_reduction": random.randint(15, 25),
                 "energy_efficiency": random.randint(70, 85),
-                "trends": DashboardMetrics.generate_time_series()
+                "trends": DashboardMetrics.fetch_time_series()
             },
             "prediction_metrics": {
                 "historical_accuracy": random.randint(85, 95),
@@ -60,6 +62,6 @@ class DashboardMetrics:
                     "public_transport": random.randint(65, 80),
                     "green_spaces": random.randint(30, 45)
                 },
-                "zone_activity": DashboardMetrics.generate_time_series(5)
+                "zone_activity": DashboardMetrics.fetch_time_series(5)
             }
         }

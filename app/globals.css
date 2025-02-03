@@ -2,232 +2,77 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    /* System Colors */
-    --background: 210 40% 98%;
-    --foreground: 222.2 84% 4.9%;
-    
-    /* Surface Colors */
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    
-    /* Brand Colors */
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    
-    /* Interface Colors */
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    
-    /* Feedback Colors */
-    --success: 142 72% 29%;
-    --success-foreground: 144 70% 98%;
-    --info: 199 89% 48%;
-    --info-foreground: 200 100% 97%;
-    --warning: 38 92% 50%;
-    --warning-foreground: 48 96% 98%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 84% 98%;
-    
-    /* Interactive Elements */
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-    --radius: 0.5rem;
-
-    /* Dashboard Theme */
-    --sidebar: 222.2 84% 4.9%;
-    --sidebar-foreground: 210 40% 98%;
-    --nav-hover: 217.2 32.6% 17.5%;
-    --nav-active: 222.2 47.4% 11.2%;
-    --card-hover: 210 40% 98%;
-  }
-
-  .dark {
-    /* System Colors */
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    
-    /* Surface Colors */
-    --card: 217.2 32.6% 17.5%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    
-    /* Brand Colors */
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    
-    /* Interface Colors */
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    
-    /* Feedback Colors */
-    --success: 142 72% 35%;
-    --success-foreground: 144 70% 98%;
-    --info: 199 89% 48%;
-    --info-foreground: 200 100% 97%;
-    --warning: 48 96% 53%;
-    --warning-foreground: 48 96% 98%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 84% 98%;
-    
-    /* Interactive Elements */
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-
-    /* Dashboard Theme */
-    --sidebar: 222.2 47.4% 11.2%;
-    --sidebar-foreground: 210 40% 98%;
-    --nav-hover: 217.2 32.6% 17.5%;
-    --nav-active: 210 40% 98%;
-    --card-hover: 217.2 32.6% 17.5%;
-  }
-
-  * {
-    @apply border-border;
-  }
-
-  body {
-    @apply bg-background text-foreground antialiased;
-    font-feature-settings: "rlig" 1, "calt" 1;
-  }
-
-  /* Improved focus styles */
-  :focus-visible {
-    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
-  }
-}
-
-@layer components {
-  /* Card Components */
-  .card-interactive {
-    @apply relative overflow-hidden hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 
-    before:absolute before:inset-0 before:bg-gradient-to-br before:from-primary/5 before:to-primary/0 
-    before:opacity-0 hover:before:opacity-100 before:transition-opacity;
-  }
-
-  .card-gradient {
-    @apply bg-gradient-to-br from-primary/5 via-primary/[0.07] to-primary/10 
-    dark:from-primary/10 dark:via-primary/[0.15] dark:to-primary/20;
-  }
-
-  /* Button Components */
-  .btn-gradient {
-    @apply relative bg-gradient-to-r from-primary to-primary/80 text-primary-foreground 
-    hover:from-primary/90 hover:to-primary/70 transition-all duration-200
-    active:scale-[0.98] disabled:opacity-70 disabled:pointer-events-none;
-  }
-
-  /* Navigation Components */
-  .nav-link {
-    @apply flex items-center gap-2 px-3 py-2 rounded-lg transition-colors duration-200 
-    text-muted-foreground hover:text-foreground relative overflow-hidden;
-  }
-
-  .nav-link-active {
-    @apply text-primary bg-primary/10 dark:bg-primary/20 font-medium;
-  }
-
-  .nav-link-hover {
-    @apply hover:bg-primary/5 dark:hover:bg-primary/10;
-  }
+body {
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 @layer utilities {
-  /* Typography Utilities */
   .text-balance {
     text-wrap: balance;
   }
+}
 
-  .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-primary/80 to-primary/60;
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
   }
-
-  /* Layout Utilities */
-  .center {
-    @apply flex items-center justify-center;
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
   }
+}
 
-  .stack {
-    @apply flex flex-col;
+@layer base {
+  * {
+    @apply border-border;
   }
-
-  .row {
-    @apply flex flex-row;
-  }
-
-  /* Background Utilities */
-  .bg-dashboard {
-    @apply bg-gradient-to-b from-background to-background/95 dark:from-background dark:to-background/98;
-  }
-
-  .bg-blur {
-    @apply backdrop-blur-md bg-background/80 dark:bg-background/80;
-  }
-
-  /* Card Utilities */
-  .dashboard-card {
-    @apply bg-card border shadow-sm hover:shadow-md transition-all duration-200 
-    dark:border-border/50 dark:shadow-none dark:hover:shadow-none dark:hover:bg-card-hover;
-  }
-
-  /* Status Utilities */
-  .status-base {
-    @apply rounded-full px-2 py-1 text-xs font-medium;
-  }
-
-  .status-success {
-    @apply status-base bg-success/10 text-success dark:bg-success/20;
-  }
-
-  .status-warning {
-    @apply status-base bg-warning/10 text-warning dark:bg-warning/20;
-  }
-
-  .status-error {
-    @apply status-base bg-destructive/10 text-destructive dark:bg-destructive/20;
-  }
-
-  .status-info {
-    @apply status-base bg-info/10 text-info dark:bg-info/20;
-  }
-
-  /* Animation Utilities */
-  .animate-in {
-    @apply transition-all duration-300 ease-in-out;
-  }
-
-  .slide-in-from-right {
-    @apply translate-x-full animate-in data-[state=open]:translate-x-0;
-  }
-
-  .slide-in-from-left {
-    @apply -translate-x-full animate-in data-[state=open]:translate-x-0;
-  }
-
-  .fade-in {
-    @apply opacity-0 animate-in data-[state=open]:opacity-100;
-  }
-
-  /* Interaction Utilities */
-  .clickable {
-    @apply cursor-pointer select-none active:scale-[0.98] transition-transform;
-  }
-
-  .pressable {
-    @apply active:scale-[0.98] transition-transform;
+  body {
+    @apply bg-background text-foreground;
   }
 }

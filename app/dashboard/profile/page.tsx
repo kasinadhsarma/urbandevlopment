@@ -1,7 +1,6 @@
 "use client"
 
 import { useUser } from "@/app/contexts/UserContext"
-import { SkinColor } from "@/app/contexts/UserContext"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -9,33 +8,19 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 
-const skinColors: Record<SkinColor, string> = {
+const skinColors = {
   light: "bg-[#FFD1B3]",
   medium: "bg-[#D2996C]",
   dark: "bg-[#8D5524]",
 }
 
 export default function Profile() {
-  const { user, updateProfile, skinColor, setSkinColor } = useUser()
-  const [firstName, setFirstName] = useState(user?.name.split(" ")[0] || "")
-  const [lastName, setLastName] = useState(user?.name.split(" ")[1] || "")
-  const [email, setEmail] = useState(user?.email || "")
-  const [jobTitle, setJobTitle] = useState(user?.role || "")
-  const [organization, setOrganization] = useState("")
+  const { skinColor, setSkinColor } = useUser()
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    try {
-      await updateProfile({
-        name: `${firstName} ${lastName}`,
-        email,
-        role: jobTitle,
-        // Add other fields as necessary
-      })
-      console.log("Profile updated", { skinColor })
-    } catch (error) {
-      console.error("Failed to update profile", error)
-    }
+    // TODO: Implement profile update logic
+    console.log("Profile updated", { skinColor })
   }
 
   return (
@@ -55,50 +40,24 @@ export default function Profile() {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="firstName">First Name</Label>
-                <Input 
-                  id="firstName" 
-                  placeholder="John" 
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                />
+                <Input id="firstName" placeholder="John" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="lastName">Last Name</Label>
-                <Input 
-                  id="lastName" 
-                  placeholder="Doe" 
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                />
+                <Input id="lastName" placeholder="Doe" />
               </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
-              <Input 
-                id="email" 
-                type="email" 
-                placeholder="john.doe@example.com" 
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
+              <Input id="email" type="email" placeholder="john.doe@example.com" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="jobTitle">Job Title</Label>
-              <Input 
-                id="jobTitle" 
-                placeholder="Urban Planner" 
-                value={jobTitle}
-                onChange={(e) => setJobTitle(e.target.value)}
-              />
+              <Input id="jobTitle" placeholder="Urban Planner" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="organization">Organization</Label>
-              <Input 
-                id="organization" 
-                placeholder="City Planning Department" 
-                value={organization}
-                onChange={(e) => setOrganization(e.target.value)}
-              />
+              <Input id="organization" placeholder="City Planning Department" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="skinColor">Skin Color</Label>
