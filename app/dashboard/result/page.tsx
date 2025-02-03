@@ -13,6 +13,9 @@ export default function Result() {
     prediction: number;
     confidence: number;
     recommendations: string[];
+    historical_data: Array<{timestamp: string; value: number}>;
+    forecast_data: Array<{timeframe: string; prediction: number}>;
+    impact_factors: Record<string, number>;
   } | null>(null)
 
   useEffect(() => {
@@ -38,23 +41,25 @@ export default function Result() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <Card>
           <CardHeader>
-            <CardTitle>Predicted Traffic Flow</CardTitle>
+            <CardTitle>Historical Traffic Flow</CardTitle>
           </CardHeader>
           <CardContent>
             <Chart 
-              type="area"
+              type="line"
               data={[
-                { 
-                  name: 'Current', 
-                  value: predictionResults.prediction,
-                  threshold: 75,
-                  baseline: 50
+                ...predictionResults.historical_data.map(item => ({
+                  name: new Date(item.timestamp).toLocaleDateString(),
+                  value: item.value
+                })),
+                {
+                  name: 'Current',
+                  value: predictionResults.prediction
                 }
               ]}
-              metrics={['value', 'threshold', 'baseline']}
-              colors={['#ef4444', '#f59e0b', '#10b981']}
+              metrics={['value']}
+              colors={['#3b82f6']}
               height={200}
-              title="Traffic Flow Level (%)"
+              title="Traffic Flow Trend (%)"
             />
             <p className={`text-sm mt-4 font-medium ${
               predictionResults.prediction > 75 ? 'text-red-500' :
@@ -70,22 +75,45 @@ export default function Result() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Prediction Confidence</CardTitle>
+            <CardTitle>Forecast Analysis</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Chart 
+              type="area"
+              data={predictionResults.forecast_data.map(item => ({
+                name: item.timeframe,
+                prediction: item.prediction,
+                baseline: predictionResults.prediction
+              }))}
+              metrics={['prediction', 'baseline']}
+              colors={['#8b5cf6', '#94a3b8']}
+              height={200}
+              title="Traffic Forecast (%)"
+            />
+            <p className="text-sm mt-4 text-muted-foreground">
+              Showing predicted traffic levels for different timeframes
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Model Confidence</CardTitle>
           </CardHeader>
           <CardContent>
             <Chart 
               type="area"
               data={[
                 { 
-                  name: 'Confidence', 
+                  name: 'Current', 
                   value: predictionResults.confidence * 100,
                   threshold: 90
                 }
               ]}
               metrics={['value', 'threshold']}
-              colors={['#8b5cf6', '#f59e0b']}
+              colors={['#10b981', '#f59e0b']}
               height={200}
-              title="Model Confidence (%)"
+              title="Prediction Confidence (%)"
             />
             <p className={`text-sm mt-4 font-medium ${
               predictionResults.confidence > 0.9 ? 'text-green-500' :
@@ -99,29 +127,28 @@ export default function Result() {
           </CardContent>
         </Card>
 
-        <Card className="md:col-span-2">
+        <Card>
           <CardHeader>
-            <CardTitle>Time-based Analysis</CardTitle>
+            <CardTitle>Impact Factors</CardTitle>
           </CardHeader>
           <CardContent>
             <Chart 
-              type="line"
-              data={[
-                { name: 'Previous', flow: 45, confidence: 92 },
-                { name: 'Current', flow: predictionResults.prediction, confidence: predictionResults.confidence * 100 },
-                { name: 'Projected', flow: predictionResults.prediction * 1.1, confidence: 85 }
-              ]}
-              metrics={['flow', 'confidence']}
-              colors={['#ef4444', '#8b5cf6']}
-              height={300}
-              title="Traffic Flow & Confidence Trend"
+              type="bar"
+              data={Object.entries(predictionResults.impact_factors).map(([factor, value]) => ({
+                name: factor.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
+                value: value * 100
+              }))}
+              metrics={['value']}
+              colors={['#ef4444']}
+              height={200}
+              title="Factor Influence (%)"
             />
           </CardContent>
         </Card>
 
         <Card className="md:col-span-2">
           <CardHeader>
-            <CardTitle>Impact Analysis & Recommendations</CardTitle>
+            <CardTitle>Recommendations & Actions</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid md:grid-cols-2 gap-6">
@@ -138,11 +165,11 @@ export default function Result() {
                   metrics={['value']}
                   colors={['#3b82f6']}
                   height={200}
-                  title="Impact Scores"
+                  title="Impact Assessment"
                 />
               </div>
               <div>
-                <h3 className="text-lg font-semibold mb-4">Recommendations</h3>
+                <h3 className="text-lg font-semibold mb-4">Recommended Actions</h3>
                 <ul className="space-y-3">
                   {predictionResults.recommendations.map((rec, index) => (
                     <li key={index} className="flex items-start">

@@ -1,15 +1,17 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Union
 import pickle
 import pandas as pd
 from ml.newpredection.prediction import predict_traffic
 from ml.urban_analysis.layout import analyze_urban_area
 from ml.trafficanalysis.trafficanalysis import TrafficAnalyzer
 from ml.sustainablitycheck.check import SustainabilityAnalyzer
+from dashboard_metrics import DashboardMetrics
 
 app = FastAPI()
+dashboard_metrics = DashboardMetrics()
 
 # Initialize analyzers
 traffic_analyzer = TrafficAnalyzer()
@@ -33,6 +35,9 @@ class TrafficPredictionResponse(BaseModel):
     prediction: float
     confidence: float
     recommendations: List[str]
+    historical_data: List[Dict[str, Union[str, float]]]
+    forecast_data: List[Dict[str, Union[str, float]]]
+    impact_factors: Dict[str, float]
 
 @app.post("/api/predict-traffic", response_model=TrafficPredictionResponse)
 async def predict_traffic_route(request: TrafficPredictionRequest):
@@ -41,7 +46,10 @@ async def predict_traffic_route(request: TrafficPredictionRequest):
         return TrafficPredictionResponse(
             prediction=prediction_result["prediction"],
             confidence=prediction_result["confidence"],
-            recommendations=prediction_result["recommendations"]
+            recommendations=prediction_result["recommendations"],
+            historical_data=prediction_result["historical_data"],
+            forecast_data=prediction_result["forecast_data"],
+            impact_factors=prediction_result["impact_factors"]
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -54,10 +62,18 @@ class TrafficAnalysisRequest(BaseModel):
     weather_condition: int
     road_type: int
 
+class AnalysisDetails(BaseModel):
+    historical_trend: List[Dict[str, Union[str, float]]]
+    hourly_pattern: List[Dict[str, Union[str, float]]]
+    zone_impacts: Dict[str, float]
+    risk_factors: Dict[str, float]
+
 class TrafficAnalysisResponse(BaseModel):
     congestion_level: float
     feature_importance: Dict[str, float]
     congestion_category: str
+    analysis_details: AnalysisDetails
+    recommendations: List[str]
 
 @app.post("/api/analyze-traffic", response_model=TrafficAnalysisResponse)
 async def analyze_traffic_route(request: TrafficAnalysisRequest):
@@ -129,6 +145,21 @@ async def analyze_urban_area_route(request: UrbanAnalysisRequest):
             public_transport_coverage=analysis_result["public_transport_coverage"],
             optimization_suggestions=analysis_result.get("suggestions") if request.include_suggestions else None
         )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+# Dashboard Overview Metrics
+class DashboardMetricsResponse(BaseModel):
+    traffic_metrics: Dict
+    sustainability_metrics: Dict
+    prediction_metrics: Dict
+    urban_metrics: Dict
+
+@app.get("/api/dashboard-metrics", response_model=DashboardMetricsResponse)
+async def get_dashboard_metrics():
+    try:
+        metrics = dashboard_metrics.get_dashboard_metrics()
+        return DashboardMetricsResponse(**metrics)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

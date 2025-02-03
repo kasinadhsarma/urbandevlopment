@@ -23,17 +23,55 @@ interface MetricData {
 }
 
 interface DashboardMetrics {
-  traffic: {
-    congestion_level: number;
-    category: string;
+  traffic_metrics: {
+    current_flow: number;
+    peak_hours: Array<{
+      hour: string;
+      level: number;
+    }>;
+    area_statistics: {
+      downtown: { flow: number; congestion: number };
+      residential: { flow: number; congestion: number };
+      industrial: { flow: number; congestion: number };
+      suburban: { flow: number; congestion: number };
+    };
   };
-  sustainability: {
-    emissions_score: number;
+  sustainability_metrics: {
+    green_coverage: number;
+    emissions_reduction: number;
     energy_efficiency: number;
+    trends: Array<{
+      date: string;
+      traffic_flow: number;
+      congestion: number;
+      public_transport: number;
+    }>;
   };
-  urban: {
-    congestion_score: number;
-    green_space_ratio: number;
+  prediction_metrics: {
+    historical_accuracy: number;
+    current_confidence: number;
+    forecast_trends: Array<{
+      timeframe: string;
+      prediction: number;
+    }>;
+  };
+  urban_metrics: {
+    density: {
+      residential: number;
+      commercial: number;
+      industrial: number;
+    };
+    infrastructure: {
+      roads: number;
+      public_transport: number;
+      green_spaces: number;
+    };
+    zone_activity: Array<{
+      date: string;
+      traffic_flow: number;
+      congestion: number;
+      public_transport: number;
+    }>;
   };
 }
 
@@ -197,7 +235,8 @@ export default function Dashboard() {
             title="Traffic Flow"
             icon={<Car />}
             metrics={[
-              { label: "Current Congestion", value: metrics.traffic.congestion_level, status: metrics.traffic.category }
+              { label: "Current Flow", value: metrics.traffic_metrics.current_flow / 100 },
+              { label: "Peak Congestion", value: Math.max(...metrics.traffic_metrics.peak_hours.map(h => h.level)) / 100 }
             ]}
             href="/dashboard/traffic-flow"
           />
@@ -205,8 +244,8 @@ export default function Dashboard() {
             title="Sustainability"
             icon={<Leaf />}
             metrics={[
-              { label: "Emissions Score", value: metrics.sustainability.emissions_score },
-              { label: "Energy Efficiency", value: metrics.sustainability.energy_efficiency }
+              { label: "Green Coverage", value: metrics.sustainability_metrics.green_coverage / 100 },
+              { label: "Energy Efficiency", value: metrics.sustainability_metrics.energy_efficiency / 100 }
             ]}
             href="/dashboard/sustainability"
           />
@@ -214,8 +253,8 @@ export default function Dashboard() {
             title="Urban Analysis"
             icon={<Building2 />}
             metrics={[
-              { label: "Congestion Score", value: metrics.urban.congestion_score },
-              { label: "Green Space Ratio", value: metrics.urban.green_space_ratio }
+              { label: "Infrastructure", value: metrics.urban_metrics.infrastructure.roads / 100 },
+              { label: "Green Spaces", value: metrics.urban_metrics.infrastructure.green_spaces / 100 }
             ]}
             href="/dashboard/urban-analysis"
           />
