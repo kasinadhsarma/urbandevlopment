@@ -1,6 +1,7 @@
 "use client"
 
 import { useUser } from "@/app/contexts/UserContext"
+import { SkinColor } from "@/app/contexts/UserContext"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -8,7 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 
-const skinColors = {
+const skinColors: Record<SkinColor, string> = {
   light: "bg-[#FFD1B3]",
   medium: "bg-[#D2996C]",
   dark: "bg-[#8D5524]",

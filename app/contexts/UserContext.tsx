@@ -12,7 +12,7 @@ import {
 
 // Enhanced types
 type Theme = "light" | "dark" | "system"
-type SkinColor = "light" | "medium" | "dark"
+export type SkinColor = "light" | "medium" | "dark"
 type Language = "en" | "es" | "fr" | "de" | "zh"
 
 interface UserPreferences {
@@ -38,19 +38,23 @@ interface UserContextType {
   // User state
   user: UserProfile | null
   setUser: (user: UserProfile | null) => void
-  
+
   // Preferences
   preferences: UserPreferences
   updatePreferences: (updates: Partial<UserPreferences>) => void
-  
+
   // Authentication
   isAuthenticated: boolean
   isLoading: boolean
   login: (email: string, password: string) => Promise<void>
   logout: () => Promise<void>
-  
+
   // User actions
   updateProfile: (updates: Partial<UserProfile>) => Promise<void>
+
+  // Skin color
+  skinColor: SkinColor
+  setSkinColor: (color: SkinColor) => void
 }
 
 const DEFAULT_PREFERENCES: UserPreferences = {
@@ -68,8 +72,8 @@ interface UserProviderProps {
   initialPreferences?: Partial<UserPreferences>
 }
 
-export function UserProvider({ 
-  children, 
+export function UserProvider({
+  children,
   initialPreferences = {}
 }: UserProviderProps) {
   // Core state
@@ -79,6 +83,7 @@ export function UserProvider({
     ...initialPreferences
   })
   const [isLoading, setIsLoading] = useState(true)
+  const [skinColor, setSkinColor] = useState<SkinColor>(DEFAULT_PREFERENCES.skinColor)
 
   // Load saved state from localStorage on mount
   useEffect(() => {
@@ -86,6 +91,7 @@ export function UserProvider({
       try {
         const savedUser = localStorage.getItem('user')
         const savedPreferences = localStorage.getItem('userPreferences')
+        const savedSkinColor = localStorage.getItem('skinColor')
 
         if (savedUser) {
           setUser(JSON.parse(savedUser))
@@ -96,6 +102,10 @@ export function UserProvider({
             ...prev,
             ...JSON.parse(savedPreferences)
           }))
+        }
+
+        if (savedSkinColor) {
+          setSkinColor(savedSkinColor as SkinColor)
         }
       } catch (error) {
         console.error('Error loading saved state:', error)
@@ -119,6 +129,10 @@ export function UserProvider({
   useEffect(() => {
     localStorage.setItem('userPreferences', JSON.stringify(preferences))
   }, [preferences])
+
+  useEffect(() => {
+    localStorage.setItem('skinColor', skinColor)
+  }, [skinColor])
 
   // Update preferences
   const updatePreferences = useCallback((updates: Partial<UserPreferences>) => {
@@ -161,9 +175,11 @@ export function UserProvider({
       setUser(null)
       // Optionally reset preferences to defaults
       setPreferences(DEFAULT_PREFERENCES)
+      setSkinColor(DEFAULT_PREFERENCES.skinColor)
       // Clear localStorage
       localStorage.removeItem('user')
       localStorage.removeItem('userPreferences')
+      localStorage.removeItem('skinColor')
     } catch (error) {
       console.error('Logout error:', error)
       throw error
@@ -206,8 +222,10 @@ export function UserProvider({
     isLoading,
     login,
     logout,
-    updateProfile
-  }), [user, preferences, isLoading, login, logout, updateProfile, updatePreferences])
+    updateProfile,
+    skinColor,
+    setSkinColor
+  }), [user, preferences, isLoading, login, logout, updateProfile, updatePreferences, skinColor, setSkinColor])
 
   return (
     <UserContext.Provider value={value}>
@@ -218,11 +236,11 @@ export function UserProvider({
 
 export function useUser() {
   const context = useContext(UserContext)
-  
+
   if (context === undefined) {
     throw new Error("useUser must be used within a UserProvider")
   }
-  
+
   return context
 }
 

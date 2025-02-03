@@ -16,10 +16,6 @@ import {
   Sun, 
   Moon, 
   ChevronRight,
-  BarChart3,
-  TrendingUp,
-  MapPin,
-  Zap
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "./ui/button"
@@ -52,24 +48,6 @@ export function Navigation() {
         { name: "Sustainability", href: "/dashboard/sustainability", icon: Lightbulb },
       ]
     },
-    {
-      title: "Quick Actions",
-      links: [
-        { name: "Analyze Traffic", href: "/dashboard/traffic-flow", icon: BarChart3 },
-        { name: "Check Sustainability", href: "/dashboard/sustainability", icon: Lightbulb },
-        { name: "Urban Planning", href: "/dashboard/urban-analysis", icon: MapPin },
-        { name: "Make Predictions", href: "/dashboard/predict", icon: TrendingUp },
-      ]
-    },
-    {
-      title: "System Status",
-      links: [
-        { name: "Traffic Analysis System", href: "/dashboard/traffic-flow", icon: Car },
-        { name: "Sustainability Monitoring", href: "/dashboard/sustainability", icon: Lightbulb },
-        { name: "Urban Analysis Tools", href: "/dashboard/urban-analysis", icon: Building2 },
-        { name: "Prediction Models", href: "/dashboard/predict", icon: TrendingUp },
-      ]
-    }
   ]
 
   const isLinkActive = (href: string) => 
