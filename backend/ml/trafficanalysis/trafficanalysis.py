@@ -104,5 +104,5 @@ class TrafficAnalyzer:
             raise FileNotFoundError(f"Traffic data file not found at: {data_path}")
 
         df = pd.read_csv(data_path)
-        historical_data = df.groupby('date')['congestion_level'].mean().to_dict()
+        historical_data = df.groupby('timestamp')['congestion_level'].mean().to_dict()
         return historical_data

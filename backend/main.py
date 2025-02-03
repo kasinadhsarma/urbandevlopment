@@ -147,7 +147,7 @@ async def get_hourly_distribution():
         raise HTTPException(status_code=500, detail=str(e))
 
 class HistoricalAccuracyResponse(BaseModel):
-    date: str
+    timestamp: str
     accuracy: float
 
 @app.get("/api/historical-accuracy", response_model=List[HistoricalAccuracyResponse])
@@ -155,7 +155,7 @@ async def get_historical_accuracy():
     try:
         # Assuming we have a function to get historical accuracy
         historical_data = traffic_analyzer.get_historical_accuracy()
-        return [HistoricalAccuracyResponse(date=date, accuracy=accuracy) for date, accuracy in historical_data.items()]
+        return [HistoricalAccuracyResponse(timestamp=timestamp, accuracy=accuracy) for timestamp, accuracy in historical_data.items()]
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
