@@ -4,7 +4,9 @@ import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 import dynamic from "next/dynamic"
+import { Chart } from "@/components/chart"
 
 const MapWithNoSSR = dynamic(() => import("@/components/map"), {
   ssr: false,
@@ -90,40 +92,59 @@ export default function UrbanAnalysis() {
                 {isLoading ? "Analyzing..." : "Analyze Selected Area"}
               </Button>
               {error && (
-                <div className="mt-4 p-4 text-red-600 bg-red-50 rounded-md">
-                  {error}
-                </div>
+                <Alert variant="destructive" className="mt-4">
+                  <AlertDescription>
+                    {error}
+                  </AlertDescription>
+                </Alert>
               )}
               {analysisData && (
                 <div className="mt-4">
-                  <div className="mb-2">
-                    <span className="font-semibold">Congestion Score:</span> {analysisData.congestion_score.toFixed(2)}
-                  </div>
-                  <div className="mb-2">
-                    <span className="font-semibold">Green Space Ratio:</span> {(analysisData.green_space_ratio * 100).toFixed(1)}%
-                  </div>
-                  <div className="mb-2">
-                    <span className="font-semibold">Public Transport Coverage:</span> {(analysisData.public_transport_coverage * 100).toFixed(1)}%
-                  </div>
+                  <Card className="mb-4">
+                    <CardHeader>
+                      <CardTitle>Analysis Results</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="mb-2">
+                        <span className="font-semibold">Congestion Score:</span> {analysisData.congestion_score.toFixed(2)}
+                      </div>
+                      <div className="mb-2">
+                        <span className="font-semibold">Green Space Ratio:</span> {(analysisData.green_space_ratio * 100).toFixed(1)}%
+                      </div>
+                      <div className="mb-2">
+                        <span className="font-semibold">Public Transport Coverage:</span> {(analysisData.public_transport_coverage * 100).toFixed(1)}%
+                      </div>
+                    </CardContent>
+                  </Card>
+                  <Card className="mb-4">
+                    <CardHeader>
+                      <CardTitle>Analysis Graphs</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <Chart data={[
+                        { name: 'Congestion Score', value: analysisData.congestion_score },
+                        { name: 'Green Space Ratio', value: analysisData.green_space_ratio },
+                        { name: 'Public Transport Coverage', value: analysisData.public_transport_coverage }
+                      ]} />
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Optimization Suggestions</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="list-disc pl-5">
+                        {analysisData.optimization_suggestions.map((suggestion, index) => (
+                          <li key={index}>{suggestion}</li>
+                        ))}
+                      </ul>
+                      <Button className="w-full mt-4">Download Detailed Report</Button>
+                    </CardContent>
+                  </Card>
                 </div>
               )}
             </CardContent>
           </Card>
-          {analysisData && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Optimization Suggestions</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ul className="list-disc pl-5">
-                  {analysisData.optimization_suggestions.map((suggestion, index) => (
-                    <li key={index}>{suggestion}</li>
-                  ))}
-                </ul>
-                <Button className="w-full mt-4">Download Detailed Report</Button>
-              </CardContent>
-            </Card>
-          )}
         </div>
       </div>
     </div>

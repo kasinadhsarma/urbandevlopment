@@ -7,6 +7,8 @@ import { Progress } from "@/components/ui/progress"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Chart } from "@/components/chart"
 
 interface TrafficAnalysis {
   congestion_level: number
@@ -24,19 +26,29 @@ function TrafficAnalysisForm() {
     weather_condition: 1,
     road_type: 1
   })
+  const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = async () => {
+    if (!formData.time_of_day || !formData.day_of_week || !formData.vehicle_count || !formData.weather_condition || !formData.road_type) {
+      setError("Please fill in all fields.")
+      return
+    }
+
     setLoading(true)
+    setError(null)
     try {
       const response = await fetch('http://localhost:8000/api/analyze-traffic', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       })
+      if (!response.ok) {
+        throw new Error('Failed to analyze traffic')
+      }
       const data = await response.json()
       setAnalysis(data)
     } catch (error) {
-      console.error('Error analyzing traffic:', error)
+      setError(error instanceof Error ? error.message : 'An error occurred')
     }
     setLoading(false)
   }
@@ -57,6 +69,13 @@ function TrafficAnalysisForm() {
 
   return (
     <div className="space-y-4">
+      {error && (
+        <Alert variant="destructive">
+          <AlertDescription>
+            {error}
+          </AlertDescription>
+        </Alert>
+      )}
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label>Time of Day (0-23)</Label>
@@ -142,6 +161,16 @@ function TrafficAnalysisForm() {
                 </div>
               ))}
             </div>
+          </div>
+          <div>
+            <h3 className="text-lg font-semibold">Analysis Graphs</h3>
+            <Chart data={[
+              { name: 'Congestion Level', value: analysis.congestion_level },
+              ...Object.entries(analysis.feature_importance).map(([feature, importance]) => ({
+                name: feature,
+                value: importance
+              }))
+            ]} />
           </div>
         </div>
       )}
