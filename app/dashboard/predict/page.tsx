@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 
 export default function Predict() {
   const [location, setLocation] = useState("")
@@ -17,6 +18,10 @@ export default function Predict() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!location || !timeframe) {
+      setError("Please fill in all fields.")
+      return
+    }
     setIsLoading(true)
     setError(null)
 
@@ -47,9 +52,11 @@ export default function Predict() {
     <div className="container mx-auto py-10">
       <h1 className="text-4xl font-bold mb-8">Traffic Prediction</h1>
       {error && (
-        <div className="mb-4 p-4 text-red-600 bg-red-50 rounded-md">
-          {error}
-        </div>
+        <Alert variant="destructive">
+          <AlertDescription>
+            {error}
+          </AlertDescription>
+        </Alert>
       )}
       <Card className="max-w-md mx-auto">
         <CardHeader>

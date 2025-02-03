@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Chart } from "@/components/chart"
 
 interface SustainabilityMetrics {
   emissions_score: number
@@ -79,8 +80,8 @@ export default function Sustainability() {
         <Alert variant="destructive">
           <AlertDescription>
             {error}
-            <Button variant="outline" className="ml-4" onClick={handleRefresh}>
-              Retry
+            <Button variant="outline" className="ml-4" onClick={handleRefresh} disabled={loading}>
+              {loading ? "Refreshing..." : "Retry"}
             </Button>
           </AlertDescription>
         </Alert>
@@ -112,8 +113,8 @@ export default function Sustainability() {
                 <p className="text-sm mt-2 text-muted-foreground">
                   Trend: {metrics.trend_analysis.emissions?.direction || 'Stable'}
                 </p>
-                <Button className="mt-4" onClick={handleRefresh}>
-                  Refresh Data
+                <Button className="mt-4" onClick={handleRefresh} disabled={loading}>
+                  {loading ? "Refreshing..." : "Refresh Data"}
                 </Button>
               </CardContent>
             </Card>
@@ -127,8 +128,8 @@ export default function Sustainability() {
                 <p className="text-sm mt-2 text-muted-foreground">
                   Trend: {metrics.trend_analysis.green_infra?.direction || 'Stable'}
                 </p>
-                <Button className="mt-4" onClick={handleRefresh}>
-                  Refresh Data
+                <Button className="mt-4" onClick={handleRefresh} disabled={loading}>
+                  {loading ? "Refreshing..." : "Refresh Data"}
                 </Button>
               </CardContent>
             </Card>
@@ -142,8 +143,8 @@ export default function Sustainability() {
                 <p className="text-sm mt-2 text-muted-foreground">
                   Trend: {metrics.trend_analysis.energy?.direction || 'Stable'}
                 </p>
-                <Button className="mt-4" onClick={handleRefresh}>
-                  Refresh Data
+                <Button className="mt-4" onClick={handleRefresh} disabled={loading}>
+                  {loading ? "Refreshing..." : "Refresh Data"}
                 </Button>
               </CardContent>
             </Card>
@@ -157,6 +158,20 @@ export default function Sustainability() {
             <CardContent>
               <p>This section would contain more detailed sustainability metrics and analysis.</p>
               <Button className="mt-4">Generate Comprehensive Report</Button>
+            </CardContent>
+          </Card>
+          <Card className="mt-6">
+            <CardHeader>
+              <CardTitle>Analysis Graphs</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Chart data={[
+                { name: 'Emissions Score', value: metrics.emissions_score },
+                { name: 'Energy Efficiency', value: metrics.energy_efficiency },
+                { name: 'Green Infrastructure', value: metrics.green_infrastructure },
+                { name: 'Public Transport Usage', value: metrics.public_transport_usage },
+                { name: 'Walking & Cycling Score', value: metrics.walking_cycling_score }
+              ]} />
             </CardContent>
           </Card>
         </TabsContent>
