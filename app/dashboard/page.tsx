@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -122,11 +122,54 @@ function MetricCard({ title, icon, metrics, href }: MetricCardProps) {
 }
 
 export default function Dashboard() {
-  const metrics: DashboardMetrics = {
-    traffic: { congestion_level: 0.4, category: "Moderate" },
-    sustainability: { emissions_score: 0.41, energy_efficiency: 0.64 },
-    urban: { congestion_score: 0.85, green_space_ratio: 0.15 }
-  };
+  const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchMetrics = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await fetch('http://localhost:8000/api/dashboard-metrics');
+        if (!response.ok) {
+          throw new Error('Failed to fetch metrics');
+        }
+        const data = await response.json();
+        setMetrics(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMetrics();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100">
+        <div className="container py-8">
+          <h1 className="text-4xl font-bold text-slate-900">Loading...</h1>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100">
+        <div className="container py-8">
+          <h1 className="text-4xl font-bold text-slate-900">Error: {error}</h1>
+        </div>
+      </div>
+    );
+  }
+
+  if (!metrics) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100">
