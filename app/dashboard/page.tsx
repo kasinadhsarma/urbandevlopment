@@ -47,8 +47,8 @@ export default function Dashboard() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              time_of_day: new Date().getHours(),
-              day_of_week: new Date().getDay() + 1,
+time_of_day: 12, // Replace with a static value or remove if not needed
+day_of_week: 1, // Replace with a static value or remove if not needed
               vehicle_count: 100,
               weather_condition: 1,
               road_type: 1
