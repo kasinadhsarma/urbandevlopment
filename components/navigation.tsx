@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation"
 import { useTheme } from "next-themes"
 import { 
   LayoutDashboard, LineChart, Lightbulb, Car, Building2,
-  Menu, X, User, LogOut, Sun, Moon
+  Menu, X, User, LogOut, Sun, Moon, Leaf
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "./ui/button"
@@ -21,7 +21,8 @@ export function Navigation() {
     { name: "Predictions", href: "/dashboard/predict", icon: LineChart },
     { name: "Urban Analysis", href: "/dashboard/urban-analysis", icon: Building2 },
     { name: "Traffic Flow", href: "/dashboard/traffic-flow", icon: Car },
-    { name: "Sustainability", href: "/dashboard/sustainability", icon: Lightbulb }
+    { name: "Sustainability", href: "/dashboard/sustainability", icon: Lightbulb },
+    { name: "Traffic Flow Sustainability", href: "/dashboard/traffic-flow-sustainability", icon: Leaf }
   ]
 
   const isLinkActive = (href: string) => 
