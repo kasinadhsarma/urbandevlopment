@@ -132,6 +132,33 @@ async def analyze_urban_area_route(request: UrbanAnalysisRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+# New Endpoints
+class HourlyDistributionResponse(BaseModel):
+    hour: int
+    traffic_volume: float
+
+@app.get("/api/hourly-distribution", response_model=List[HourlyDistributionResponse])
+async def get_hourly_distribution():
+    try:
+        # Assuming we have a function to get hourly distribution
+        hourly_data = traffic_analyzer.get_hourly_distribution()
+        return [HourlyDistributionResponse(hour=hour, traffic_volume=volume) for hour, volume in hourly_data.items()]
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+class HistoricalAccuracyResponse(BaseModel):
+    date: str
+    accuracy: float
+
+@app.get("/api/historical-accuracy", response_model=List[HistoricalAccuracyResponse])
+async def get_historical_accuracy():
+    try:
+        # Assuming we have a function to get historical accuracy
+        historical_data = traffic_analyzer.get_historical_accuracy()
+        return [HistoricalAccuracyResponse(date=date, accuracy=accuracy) for date, accuracy in historical_data.items()]
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)

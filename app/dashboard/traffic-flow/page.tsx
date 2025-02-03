@@ -7,6 +7,7 @@ import { Progress } from "@/components/ui/progress"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Clock, Calendar, Car, Cloud, Map, Activity, LineChart, BarChart3 } from "lucide-react"
 
 interface TrafficAnalysis {
   congestion_level: number
@@ -42,107 +43,180 @@ function TrafficAnalysisForm() {
   }
 
   const weatherConditions = [
-    { value: 1, label: "Clear" },
-    { value: 2, label: "Rain" },
-    { value: 3, label: "Snow" },
-    { value: 4, label: "Fog" }
+    { value: 1, label: "Clear", icon: <Cloud className="h-4 w-4" /> },
+    { value: 2, label: "Rain", icon: <Cloud className="h-4 w-4" /> },
+    { value: 3, label: "Snow", icon: <Cloud className="h-4 w-4" /> },
+    { value: 4, label: "Fog", icon: <Cloud className="h-4 w-4" /> }
   ]
 
   const roadTypes = [
-    { value: 1, label: "Highway" },
-    { value: 2, label: "Main Street" },
-    { value: 3, label: "Residential" },
-    { value: 4, label: "Downtown" }
+    { value: 1, label: "Highway", icon: <Map className="h-4 w-4" /> },
+    { value: 2, label: "Main Street", icon: <Map className="h-4 w-4" /> },
+    { value: 3, label: "Residential", icon: <Map className="h-4 w-4" /> },
+    { value: 4, label: "Downtown", icon: <Map className="h-4 w-4" /> }
   ]
 
   return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label>Time of Day (0-23)</Label>
-          <Input
-            type="number"
-            min={0}
-            max={23}
-            value={formData.time_of_day}
-            onChange={(e) => setFormData({...formData, time_of_day: parseInt(e.target.value)})}
-          />
-        </div>
-        <div className="space-y-2">
-          <Label>Day of Week (1-7)</Label>
-          <Input
-            type="number"
-            min={1}
-            max={7}
-            value={formData.day_of_week}
-            onChange={(e) => setFormData({...formData, day_of_week: parseInt(e.target.value)})}
-          />
-        </div>
-        <div className="space-y-2">
-          <Label>Vehicle Count</Label>
-          <Input
-            type="number"
-            value={formData.vehicle_count}
-            onChange={(e) => setFormData({...formData, vehicle_count: parseInt(e.target.value)})}
-          />
-        </div>
-        <div className="space-y-2">
-          <Label>Weather Condition</Label>
-          <Select 
-            value={formData.weather_condition.toString()}
-            onValueChange={(value) => setFormData({...formData, weather_condition: parseInt(value)})}>
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {weatherConditions.map((condition) => (
-                <SelectItem key={condition.value} value={condition.value.toString()}>
-                  {condition.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="space-y-2">
-          <Label>Road Type</Label>
-          <Select 
-            value={formData.road_type.toString()}
-            onValueChange={(value) => setFormData({...formData, road_type: parseInt(value)})}>
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {roadTypes.map((type) => (
-                <SelectItem key={type.value} value={type.value.toString()}>
-                  {type.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <Card className="bg-gray-800/50 border-gray-700">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-2 mb-4">
+              <Clock className="h-5 w-5 text-blue-500" />
+              <Label className="text-gray-200">Time of Day</Label>
+            </div>
+            <Input
+              type="number"
+              min={0}
+              max={23}
+              value={formData.time_of_day}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({...formData, time_of_day: parseInt(e.target.value)})}
+              className="bg-gray-700/50 border-gray-600"
+            />
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gray-800/50 border-gray-700">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-2 mb-4">
+              <Calendar className="h-5 w-5 text-blue-500" />
+              <Label className="text-gray-200">Day of Week</Label>
+            </div>
+            <Input
+              type="number"
+              min={1}
+              max={7}
+              value={formData.day_of_week}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({...formData, day_of_week: parseInt(e.target.value)})}
+              className="bg-gray-700/50 border-gray-600"
+            />
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gray-800/50 border-gray-700">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-2 mb-4">
+              <Car className="h-5 w-5 text-blue-500" />
+              <Label className="text-gray-200">Vehicle Count</Label>
+            </div>
+            <Input
+              type="number"
+              value={formData.vehicle_count}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({...formData, vehicle_count: parseInt(e.target.value)})}
+              className="bg-gray-700/50 border-gray-600"
+            />
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gray-800/50 border-gray-700">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-2 mb-4">
+              <Cloud className="h-5 w-5 text-blue-500" />
+              <Label className="text-gray-200">Weather</Label>
+            </div>
+            <Select
+              value={formData.weather_condition.toString()}
+              onValueChange={(value: string) => setFormData({...formData, weather_condition: parseInt(value)})}>
+              <SelectTrigger className="bg-gray-700/50 border-gray-600">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {weatherConditions.map((condition) => (
+                  <SelectItem key={condition.value} value={condition.value.toString()}>
+                    <div className="flex items-center gap-2">
+                      {condition.icon}
+                      {condition.label}
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gray-800/50 border-gray-700">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-2 mb-4">
+              <Map className="h-5 w-5 text-blue-500" />
+              <Label className="text-gray-200">Road Type</Label>
+            </div>
+            <Select
+              value={formData.road_type.toString()}
+              onValueChange={(value: string) => setFormData({...formData, road_type: parseInt(value)})}>
+              <SelectTrigger className="bg-gray-700/50 border-gray-600">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {roadTypes.map((type) => (
+                  <SelectItem key={type.value} value={type.value.toString()}>
+                    <div className="flex items-center gap-2">
+                      {type.icon}
+                      {type.label}
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </CardContent>
+        </Card>
       </div>
-      <Button onClick={handleSubmit} disabled={loading}>
-        {loading ? "Analyzing..." : "Analyze Traffic"}
+
+      <Button
+        onClick={handleSubmit}
+        disabled={loading}
+        className="w-full bg-blue-500 hover:bg-blue-600"
+      >
+        {loading ? (
+          <>
+            <Activity className="h-4 w-4 mr-2 animate-spin" />
+            Analyzing...
+          </>
+        ) : (
+          <>
+            <LineChart className="h-4 w-4 mr-2" />
+            Analyze Traffic
+          </>
+        )}
       </Button>
 
       {analysis && (
-        <div className="mt-4 space-y-4">
-          <div>
-            <h3 className="text-lg font-semibold">Congestion Level: {Math.round(analysis.congestion_level * 100)}%</h3>
-            <Progress value={analysis.congestion_level * 100} className="w-full h-4 mt-2" />
-            <p className="text-sm mt-1">Category: {analysis.congestion_category}</p>
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold">Feature Importance</h3>
-            <div className="space-y-2 mt-2">
-              {Object.entries(analysis.feature_importance).map(([feature, importance]) => (
-                <div key={feature} className="flex justify-between items-center">
-                  <span className="text-sm">{feature}</span>
-                  <Progress value={importance * 100} className="w-1/2 h-2" />
+        <div className="grid gap-6 mt-6">
+          <Card className="bg-gray-800/50 border-gray-700">
+            <CardHeader>
+              <CardTitle className="text-gray-200 flex items-center gap-2">
+                <BarChart3 className="h-5 w-5 text-blue-500" />
+                Traffic Analysis Results
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-6">
+                <div>
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-gray-400">Congestion Level</span>
+                    <span className="text-blue-500">{Math.round(analysis.congestion_level * 100)}%</span>
+                  </div>
+                  <Progress
+                    value={analysis.congestion_level * 100}
+                    className="h-3 bg-blue-950"
+                  />
+                  <p className="text-sm mt-2 text-gray-400">Category: {analysis.congestion_category}</p>
                 </div>
-              ))}
-            </div>
-          </div>
+
+                <div className="space-y-4">
+                  <h4 className="text-gray-200 font-semibold">Feature Importance</h4>
+                  {Object.entries(analysis.feature_importance).map(([feature, importance]) => (
+                    <div key={feature}>
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-gray-400">{feature}</span>
+                        <span className="text-blue-500">{Math.round(importance * 100)}%</span>
+                      </div>
+                      <Progress value={importance * 100} className="h-2 bg-blue-950" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       )}
     </div>
@@ -151,30 +225,40 @@ function TrafficAnalysisForm() {
 
 export default function TrafficFlow() {
   return (
-    <div className="container mx-auto py-10">
-      <h1 className="text-4xl font-bold mb-8">Traffic Flow Analysis</h1>
-      <Card>
-        <CardHeader>
-          <CardTitle>Traffic Analysis</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <TrafficAnalysisForm />
-        </CardContent>
-      </Card>
-      <Card className="mt-6">
-        <CardHeader>
-          <CardTitle>Traffic Optimization Suggestions</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ul className="list-disc pl-5">
-            <li>Optimize signal timing based on current congestion levels</li>
-            <li>Implement dynamic lane management during peak hours</li>
-            <li>Consider road capacity improvements in high congestion areas</li>
-            <li>Deploy smart parking solutions to reduce search traffic</li>
-            <li>Encourage alternate routes during predicted high congestion periods</li>
-          </ul>
-        </CardContent>
-      </Card>
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-900 to-gray-800 p-8">
+      <div className="max-w-7xl mx-auto space-y-8">
+        <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-violet-500">
+          Traffic Flow Analysis
+        </h1>
+
+        <Card className="bg-gray-800/50 border-gray-700">
+          <CardContent className="pt-6">
+            <TrafficAnalysisForm />
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gray-800/50 border-gray-700">
+          <CardHeader>
+            <CardTitle className="text-gray-200">Optimization Suggestions</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className="space-y-3">
+              {[
+                "Optimize signal timing based on current congestion levels",
+                "Implement dynamic lane management during peak hours",
+                "Consider road capacity improvements in high congestion areas",
+                "Deploy smart parking solutions to reduce search traffic",
+                "Encourage alternate routes during predicted high congestion periods"
+              ].map((suggestion, index) => (
+                <li key={index} className="flex items-start gap-2 text-gray-300">
+                  <div className="h-2 w-2 rounded-full bg-blue-500 mt-2"></div>
+                  {suggestion}
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   )
 }

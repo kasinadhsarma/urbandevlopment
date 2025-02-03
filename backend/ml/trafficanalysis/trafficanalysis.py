@@ -86,25 +86,23 @@ class TrafficAnalyzer:
         """Analyze traffic patterns and trends"""
         if data_path is None:
             data_path = os.path.join(os.path.dirname(__file__), 'traffic_data.csv')
-        
+
+    def get_hourly_distribution(self):
+        """Get hourly traffic distribution"""
+        data_path = os.path.join(os.path.dirname(__file__), 'traffic_data.csv')
         if not os.path.exists(data_path):
             raise FileNotFoundError(f"Traffic data file not found at: {data_path}")
-            
+
         df = pd.read_csv(data_path)
-        
-        # Time-based analysis
-        time_analysis = df.groupby('time_of_day')['congestion_level'].mean().to_dict()
-        day_analysis = df.groupby('day_of_week')['congestion_level'].mean().to_dict()
-        
-        # Weather impact
-        weather_impact = df.groupby('weather_condition')['congestion_level'].mean().to_dict()
-        
-        # Road type analysis
-        road_analysis = df.groupby('road_type')['congestion_level'].mean().to_dict()
-        
-        return {
-            'time_based_patterns': time_analysis,
-            'daily_patterns': day_analysis,
-            'weather_impact': weather_impact,
-            'road_type_analysis': road_analysis
-        }
+        hourly_data = df.groupby('time_of_day')['vehicle_count'].mean().to_dict()
+        return hourly_data
+
+    def get_historical_accuracy(self):
+        """Get historical accuracy of traffic predictions"""
+        data_path = os.path.join(os.path.dirname(__file__), 'traffic_data.csv')
+        if not os.path.exists(data_path):
+            raise FileNotFoundError(f"Traffic data file not found at: {data_path}")
+
+        df = pd.read_csv(data_path)
+        historical_data = df.groupby('date')['congestion_level'].mean().to_dict()
+        return historical_data
