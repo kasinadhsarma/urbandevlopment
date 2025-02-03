@@ -17,7 +17,7 @@ export default function Home() {
           </h1>
           
           {/* Mobile Menu */}
-          <button className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+          <button className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label="Toggle menu">
             <Menu className="h-6 w-6" />
           </button>
           
