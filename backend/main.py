@@ -108,27 +108,47 @@ async def get_sustainability_recommendations():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+# NEW: Define model for area distribution
+class AreaDistribution(BaseModel):
+    category: str
+    percentage: float
+
 # Urban Analysis Models
 class UrbanAnalysisRequest(BaseModel):
     area: str
     include_suggestions: bool = True
 
+# Updated response model using AreaDistribution
 class UrbanAnalysisResponse(BaseModel):
     congestion_score: float
     green_space_ratio: float
     public_transport_coverage: float
     optimization_suggestions: Optional[List[str]]
+    hourly_distribution: Dict[int, float]
+    historical_data: Dict[str, float]
+    area_distribution: List[AreaDistribution]
 
 @app.post("/api/analyze-urban-area", response_model=UrbanAnalysisResponse)
 async def analyze_urban_area_route(request: UrbanAnalysisRequest):
     try:
         analysis_result = analyze_urban_area(request.area)
-        return UrbanAnalysisResponse(
-            congestion_score=analysis_result["congestion_score"],
-            green_space_ratio=analysis_result["green_space_ratio"],
-            public_transport_coverage=analysis_result["public_transport_coverage"],
-            optimization_suggestions=analysis_result.get("suggestions") if request.include_suggestions else None
-        )
+        hourly_data = traffic_analyzer.get_hourly_distribution()
+        historical_data = traffic_analyzer.get_historical_accuracy()
+        # Placeholder area distribution data
+        area_distribution = [
+            {"category": "Residential", "percentage": 40},
+            {"category": "Commercial", "percentage": 35},
+            {"category": "Industrial", "percentage": 25}
+        ]
+        return {
+            "congestion_score": analysis_result["congestion_score"],
+            "green_space_ratio": analysis_result["green_space_ratio"],
+            "public_transport_coverage": analysis_result["public_transport_coverage"],
+            "optimization_suggestions": analysis_result.get("suggestions") if request.include_suggestions else [],
+            "hourly_distribution": hourly_data,
+            "historical_data": historical_data,
+            "area_distribution": area_distribution
+        }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -153,11 +173,26 @@ class HistoricalAccuracyResponse(BaseModel):
 @app.get("/api/historical-accuracy", response_model=List[HistoricalAccuracyResponse])
 async def get_historical_accuracy():
     try:
-        # Assuming we have a function to get historical accuracy
+        # Add logging to debug the issue
         historical_data = traffic_analyzer.get_historical_accuracy()
-        return [HistoricalAccuracyResponse(timestamp=timestamp, accuracy=accuracy) for timestamp, accuracy in historical_data.items()]
+        print(f"Historical data: {historical_data}")  # Debug print
+        
+        # Convert the data to the response model
+        response_data = []
+        for timestamp, accuracy in historical_data.items():
+            try:
+                response_data.append(HistoricalAccuracyResponse(
+                    timestamp=str(timestamp),  # Ensure timestamp is string
+                    accuracy=float(accuracy)   # Ensure accuracy is float
+                ))
+            except Exception as conversion_error:
+                print(f"Error converting data for timestamp {timestamp}: {conversion_error}")
+                continue
+                
+        return response_data
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        print(f"Error in get_historical_accuracy endpoint: {str(e)}")  # Debug print
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 if __name__ == "__main__":
     import uvicorn
