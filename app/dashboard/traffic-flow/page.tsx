@@ -13,6 +13,8 @@ interface TrafficAnalysis {
   congestion_level: number
   feature_importance: { [key: string]: number }
   congestion_category: string
+  hourly_distribution: { [key: number]: number }
+  historical_accuracy: { [key: string]: number }
 }
 
 function TrafficAnalysisForm() {
@@ -226,6 +228,32 @@ function TrafficAnalysisForm() {
                         <span className="text-blue-500">{Math.round(importance * 100)}%</span>
                       </div>
                       <Progress value={importance * 100} className="h-2 bg-blue-950" />
+                    </div>
+                  ))}
+                </div>
+
+                <div className="space-y-4">
+                  <h4 className="text-gray-200 font-semibold">Hourly Distribution</h4>
+                  {analysis.hourly_distribution && Object.entries(analysis.hourly_distribution).map(([hour, volume]) => (
+                    <div key={hour}>
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-gray-400">{hour}:00</span>
+                        <span className="text-blue-500">{Math.round(volume * 100)}%</span>
+                      </div>
+                      <Progress value={volume * 100} className="h-2 bg-blue-950" />
+                    </div>
+                  ))}
+                </div>
+
+                <div className="space-y-4">
+                  <h4 className="text-gray-200 font-semibold">Historical Accuracy</h4>
+                  {analysis.historical_accuracy && Object.entries(analysis.historical_accuracy).map(([timestamp, accuracy]) => (
+                    <div key={timestamp}>
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-gray-400">{timestamp}</span>
+                        <span className="text-blue-500">{Math.round(accuracy * 100)}%</span>
+                      </div>
+                      <Progress value={accuracy * 100} className="h-2 bg-blue-950" />
                     </div>
                   ))}
                 </div>
