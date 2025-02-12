@@ -4,18 +4,24 @@
     "NEXT_PUBLIC_MAPBOX_TOKEN": "pk.eyJ1Ijoia2FzaW5hZGhzYXJtYSIsImEiOiJjbTY5NGJkcGMwNWY5Mmpxd2g2MXgxemloIn0.DRcazuU3mvV5Q2HIRXYoOA"
   },
   "buildCommand": "npm run build",
-  "installCommand": "pip install -r backend/requirements.txt && npm install",
+  "installCommand": "pip install --upgrade setuptools && pip install -r backend/requirements.txt && npm install",
   "builds": [
     {
       "src": "backend/main.py",
       "use": "@vercel/python",
       "config": {
+        "runtime": "python3.10",
         "maxLambdaSize": "15mb",
         "includedFiles": [
+          "backend/requirements.txt",
+          "backend/pyproject.toml",
           "backend/ml/trafficanalysis/traffic_congestion_model.pkl",
           "backend/ml/trafficanalysis/scaler.pkl",
-          "backend/requirements.txt",
-          "backend/pyproject.toml"
+          "backend/ml/newpredection/traffic_prediction_model.pkl",
+          "backend/ml/sustainablitycheck/carbon_model.pkl",
+          "backend/ml/sustainablitycheck/green_model.pkl",
+          "backend/ml/sustainablitycheck/renewable_model.pkl",
+          "backend/ml/urban_analysis/urban_optimization_model.pkl"
         ]
       }
     },
