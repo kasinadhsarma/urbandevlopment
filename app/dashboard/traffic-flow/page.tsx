@@ -31,7 +31,8 @@ function TrafficAnalysisForm() {
     setLoading(true)
     setError(null)
     try {
-      const response = await fetch('http://localhost:8000/api/analyze-traffic', {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const response = await fetch(`${apiUrl}/api/analyze-traffic`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
