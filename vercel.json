@@ -4,27 +4,19 @@
     "NEXT_PUBLIC_MAPBOX_TOKEN": "@mapbox_token",
     "NEXT_PUBLIC_API_URL": "@api_url"
   },
-  "build": {
-    "env": {
-      "NEXT_PUBLIC_MAPBOX_TOKEN": "@mapbox_token",
-      "NEXT_PUBLIC_API_URL": "@api_url"
-    }
-  },
   "buildCommand": "npm run build",
-  "outputDirectory": ".next",
-  "functions": {
-    "backend/main.py": {
-      "memory": 1024,
-      "maxDuration": 10
-    }
-  },
+  "installCommand": "pip install -r backend/requirements.txt && npm install",
   "builds": [
     {
       "src": "backend/main.py",
-      "use": "@vercel/python",
+      "use": "@vercel/python@3.1.0",
       "config": {
         "maxLambdaSize": "15mb",
-        "runtime": "python3.9"
+        "runtime": "python3.9",
+        "includedFiles": [
+          "backend/ml/trafficanalysis/traffic_congestion_model.pkl",
+          "backend/ml/trafficanalysis/scaler.pkl"
+        ]
       }
     },
     {
