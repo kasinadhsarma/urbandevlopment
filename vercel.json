@@ -8,13 +8,14 @@
   "builds": [
     {
       "src": "backend/main.py",
-      "use": "@vercel/python@3.1.0",
+      "use": "@vercel/python",
       "config": {
         "maxLambdaSize": "15mb",
-        "runtime": "python3.10",
         "includedFiles": [
           "backend/ml/trafficanalysis/traffic_congestion_model.pkl",
-          "backend/ml/trafficanalysis/scaler.pkl"
+          "backend/ml/trafficanalysis/scaler.pkl",
+          "backend/requirements.txt",
+          "backend/pyproject.toml"
         ]
       }
     },
