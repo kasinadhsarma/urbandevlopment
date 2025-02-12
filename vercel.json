@@ -1,8 +1,7 @@
 {
   "version": 2,
   "env": {
-    "NEXT_PUBLIC_MAPBOX_TOKEN": "@mapbox_token",
-    "NEXT_PUBLIC_API_URL": "@api_url"
+    "NEXT_PUBLIC_MAPBOX_TOKEN": "pk.eyJ1Ijoia2FzaW5hZGhzYXJtYSIsImEiOiJjbTY5NGJkcGMwNWY5Mmpxd2g2MXgxemloIn0.DRcazuU3mvV5Q2HIRXYoOA"
   },
   "buildCommand": "npm run build",
   "installCommand": "pip install -r backend/requirements.txt && npm install",
