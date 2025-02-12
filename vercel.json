@@ -3,14 +3,14 @@
   "env": {
     "NEXT_PUBLIC_MAPBOX_TOKEN": "pk.eyJ1Ijoia2FzaW5hZGhzYXJtYSIsImEiOiJjbTY5NGJkcGMwNWY5Mmpxd2g2MXgxemloIn0.DRcazuU3mvV5Q2HIRXYoOA"
   },
-  "buildCommand": "pip install -r backend/requirements.txt && npm run build",
-  "installCommand": "npm install",
+  "buildCommand": "python -m pip install --upgrade pip setuptools wheel Cython && pip install -r backend/requirements.txt && npm run build",
+  "installCommand": "python -m pip install --upgrade pip && npm install",
   "builds": [
     {
       "src": "backend/main.py",
       "use": "@vercel/python",
       "config": {
-        "runtime": "python3.9",
+        "runtime": "python3.12",
         "maxLambdaSize": "15mb",
         "includedFiles": [
           "backend/requirements.txt",
