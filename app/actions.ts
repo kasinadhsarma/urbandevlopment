@@ -1,9 +1,6 @@
 "use server"
 
-export async function getPredictions(data: {
-  location: [number, number]
-  timeframe: string
-}) {
+export async function getPredictions() {
   // This would connect to your ML model in production
   await new Promise((resolve) => setTimeout(resolve, 1000))
 
@@ -14,4 +11,3 @@ export async function getPredictions(data: {
     recommendations: ["Optimize traffic signal timing", "Add bike lanes", "Increase green spaces"],
   }
 }
-

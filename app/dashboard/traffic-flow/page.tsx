@@ -18,6 +18,7 @@ interface TrafficAnalysis {
 function TrafficAnalysisForm() {
   const [loading, setLoading] = useState(false)
   const [analysis, setAnalysis] = useState<TrafficAnalysis | null>(null)
+  const [error, setError] = useState<string | null>(null)
   const [formData, setFormData] = useState({
     time_of_day: 12,
     day_of_week: 1,
@@ -28,16 +29,22 @@ function TrafficAnalysisForm() {
 
   const handleSubmit = async () => {
     setLoading(true)
+    setError(null)
     try {
       const response = await fetch('http://localhost:8000/api/analyze-traffic', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       })
+      if (!response.ok) {
+        throw new Error('Traffic analysis failed. Please try again later.')
+      }
       const data = await response.json()
       setAnalysis(data)
     } catch (error) {
       console.error('Error analyzing traffic:', error)
+      setError(error instanceof Error ? error.message : 'An unexpected error occurred')
+      setAnalysis(null)
     }
     setLoading(false)
   }
@@ -161,23 +168,30 @@ function TrafficAnalysisForm() {
         </Card>
       </div>
 
-      <Button
-        onClick={handleSubmit}
-        disabled={loading}
-        className="w-full bg-blue-500 hover:bg-blue-600"
-      >
-        {loading ? (
-          <>
-            <Activity className="h-4 w-4 mr-2 animate-spin" />
-            Analyzing...
-          </>
-        ) : (
-          <>
-            <LineChart className="h-4 w-4 mr-2" />
-            Analyze Traffic
-          </>
+      <div className="space-y-4">
+        {error && (
+          <div className="bg-red-500/10 border border-red-500/50 text-red-500 px-4 py-3 rounded-md">
+            {error}
+          </div>
         )}
-      </Button>
+        <Button
+          onClick={handleSubmit}
+          disabled={loading}
+          className="w-full bg-blue-500 hover:bg-blue-600"
+        >
+          {loading ? (
+            <>
+              <Activity className="h-4 w-4 mr-2 animate-spin" />
+              Analyzing...
+            </>
+          ) : (
+            <>
+              <LineChart className="h-4 w-4 mr-2" />
+              Analyze Traffic
+            </>
+          )}
+        </Button>
+      </div>
 
       {analysis && (
         <div className="grid gap-6 mt-6">
@@ -204,7 +218,7 @@ function TrafficAnalysisForm() {
 
                 <div className="space-y-4">
                   <h4 className="text-gray-200 font-semibold">Feature Importance</h4>
-                  {Object.entries(analysis.feature_importance).map(([feature, importance]) => (
+                  {analysis.feature_importance && Object.entries(analysis.feature_importance).map(([feature, importance]) => (
                     <div key={feature}>
                       <div className="flex justify-between items-center mb-2">
                         <span className="text-gray-400">{feature}</span>

@@ -226,6 +226,202 @@ The sustainability page provides detailed metrics and analysis related to sustai
 - **CustomTooltip Component**: Custom tooltip for charts to display detailed information on hover.
 - **Sustainability Component**: Main component that fetches and displays sustainability metrics, including loading and error handling.
 
+#### Prediction Page (`app/dashboard/predict/page.tsx`)
+The prediction page allows users to input parameters for traffic prediction and view the results.
+
+- **Form Handling**: Uses state management to handle form inputs and submission.
+- **API Call**: Fetches prediction results from the backend API.
+- **Result Display**: Displays prediction results and recommendations.
+
+#### Result Page (`app/dashboard/result/page.tsx`)
+The result page displays the detailed analysis and recommendations based on the traffic prediction.
+
+- **MetricCard Component**: Displays key metrics with progress bars.
+- **Charts**: Uses Recharts to display hourly traffic distribution and historical accuracy.
+- **Recommendations**: Lists actionable recommendations based on the prediction results.
+
+#### Urban Analysis Page (`app/dashboard/urban-analysis/page.tsx`)
+The urban analysis page provides detailed metrics and analysis related to urban infrastructure.
+
+- **Map Component**: Displays a dynamic map view of the selected area.
+- **MetricCard Component**: Displays key metrics with visual indicators.
+- **Charts**: Uses Recharts to display historical trends.
+- **Optimization Suggestions**: Lists actionable suggestions for urban optimization.
+
+#### Traffic Flow Page (`app/dashboard/traffic-flow/page.tsx`)
+The traffic flow page allows users to input parameters for traffic analysis and view the results.
+
+- **Form Handling**: Uses state management to handle form inputs and submission.
+- **API Call**: Fetches traffic analysis results from the backend API.
+- **Result Display**: Displays analysis results and feature importance.
+
+### Machine Learning Development
+
+#### Traffic Dataset Creation (`backend/ml/trafficanalysis/create_traffic_dataset.py`)
+
+This script generates synthetic traffic data for model training and evaluation.
+
+- **Function**: `create_synthetic_traffic_data`
+  - **Purpose**: Generates synthetic traffic data with features like time of day, day of week, vehicle count, weather condition, and road type.
+  - **Implementation**: Uses numpy to create random data and pandas to structure it into a DataFrame.
+
+- **Function**: `evaluate_model_accuracy`
+  - **Purpose**: Evaluates the traffic prediction model using various metrics.
+  - **Implementation**: Loads the dataset, splits it into training and testing sets, trains a RandomForestRegressor, and evaluates the model using metrics like MSE, RMSE, MAE, and R² score. It also plots feature importance.
+
+- **Function**: `predict_traffic`
+  - **Purpose**: Makes traffic predictions using the trained model.
+  - **Implementation**: Takes input features and uses the trained model to predict congestion levels.
+
+#### Traffic Analysis Model (`backend/ml/trafficanalysis/model.ipynb`)
+
+This Jupyter notebook details the process of creating and evaluating a traffic analysis model.
+
+- **Data Generation**:
+  - **Function**: `create_traffic_data`
+    - **Purpose**: Generates synthetic traffic data with additional features like special events, road work, and accidents.
+    - **Implementation**: Uses numpy to create random data and pandas to structure it into a DataFrame.
+
+- **Visualization**:
+  - **Function**: `plot_traffic_patterns`
+    - **Purpose**: Visualizes traffic patterns based on different features.
+    - **Implementation**: Uses matplotlib and seaborn to create plots for hourly, daily, weather, and road type impacts, as well as vehicle distribution.
+
+- **Model Training**:
+  - **Data Preparation**: Splits the data into training and testing sets and scales the features using StandardScaler.
+  - **Model Training**: Trains a RandomForestRegressor model.
+  - **Evaluation**: Evaluates the model using metrics like R² score, MSE, and MAE.
+  - **Feature Importance**: Plots the importance of different features in the model.
+
+### Project Structure
+
+```
+urbandevlopment/
+├── app/
+│   ├── actions.ts
+│   ├── client-header.tsx
+│   ├── favicon.ico
+│   ├── globals.css
+│   ├── layout.tsx
+│   ├── page.tsx
+│   ├── auth/
+│   │   ├── layout.tsx
+│   │   ├── forgot-password/
+│   │   │   └── page.tsx
+│   │   ├── login/
+│   │   │   └── page.tsx
+│   │   └── signup/
+│   │       └── page.tsx
+│   ├── contexts/
+│   │   ├── SidebarContext.tsx
+│   │   └── UserContext.tsx
+│   ├── dashboard/
+│   │   ├── layout.tsx
+│   │   ├── page.tsx
+│   │   ├── background-developments/
+│   │   │   └── page.tsx
+│   │   ├── predict/
+│   │   │   └── page.tsx
+│   │   ├── profile/
+│   │   │   └── page.tsx
+│   │   ├── projects/
+│   │   │   └── page.tsx
+│   │   ├── result/
+│   │   │   └── page.tsx
+│   │   ├── sustainability/
+│   │   │   └── page.tsx
+│   │   ├── traffic-flow/
+│   │   │   └── page.tsx
+│   │   └── urban-analysis/
+│   │       ├── page.tsx
+│   │       └── styles.module.css
+│   ├── fonts/
+│   │   ├── GeistMonoVF.woff
+│   │   └── GeistVF.woff
+├── backend/
+│   ├── __init__.py
+│   ├── dashboard_metrics.py
+│   ├── main.py
+│   ├── requirements.txt
+│   ├── sustainability_data.csv
+│   ├── ml/
+│   │   ├── newpredection/
+│   │   │   ├── dataset.py
+│   │   │   ├── main.ipynb
+│   │   │   ├── prediction.py
+│   │   │   ├── traffic_data.csv
+│   │   │   ├── traffic_prediction_model.pkl
+│   │   │   └── train.py
+│   │   ├── sustainablitycheck/
+│   │   │   ├── carbon_model.pkl
+│   │   │   ├── check.py
+│   │   │   ├── create_sustainability_dataset.py
+│   │   │   ├── green_model.pkl
+│   │   │   ├── ml.ipynb
+│   │   │   ├── renewable_model.pkl
+│   │   │   ├── sustainability_data.csv
+│   │   │   └── train_sustainability_model.py
+│   │   ├── trafficanalysis/
+│   │   │   ├── create_traffic_dataset.py
+│   │   │   ├── model_accuracy.png
+│   │   │   ├── model.ipynb
+│   │   │   ├── scaler.pkl
+│   │   │   ├── traffic_congestion_model.pkl
+│   │   │   ├── traffic_data.csv
+│   │   │   ├── trafficanalysis.py
+│   │   │   └── train_traffic_model.py
+│   │   └── urban_analysis/
+│   │       ├── analysis.ipynb
+│   │       ├── create_urban_dataset.py
+│   │       ├── layout.py
+│   │       ├── train_urban_model.py
+│   │       ├── urban_data.csv
+│   │       └── urban_optimization_model.pkl
+├── components/
+│   ├── chart.tsx
+│   ├── congestion-map.tsx
+│   ├── index.ts
+│   ├── map.tsx
+│   ├── navigation.tsx
+│   ├── overview.tsx
+│   ├── recent-activity.tsx
+│   ├── theme-provider.tsx
+│   ├── theme-toggle.tsx
+│   ├── UserContext.tsx
+│   └── ui/
+│       ├── alert-dialog.tsx
+│       ├── alert.tsx
+│       ├── avatar.tsx
+│       ├── button.tsx
+│       ├── card.tsx
+│       ├── dialog.tsx
+│       ├── input.tsx
+│       ├── label.tsx
+│       ├── progress.tsx
+│       ├── scroll-area.tsx
+│       ├── select.tsx
+│       ├── separator.tsx
+│       ├── tabs.tsx
+│       └── textarea.tsx
+├── lib/
+│   └── utils.ts
+├── .eslintrc.json
+├── .gitignore
+├── components.json
+├── image.jpeg
+├── next.config.js
+├── next.config.mjs
+├── package-lock.json
+├── package.json
+├── postcss.config.mjs
+├── README.md
+├── Screenshot from 2025-02-03 20-45-53.png
+├── sustainability_data.csv
+├── sustainability_report.md
+├── tailwind.config.ts
+└── tsconfig.json
+```
+
 ### Conclusion
 
-The sustainability dashboard provides a comprehensive view of sustainability metrics and analysis. The frontend is built using React, while the backend is built using Python. The integration between the frontend and backend ensures that the dashboard provides real-time data and insights.
+The sustainability dashboard provides a comprehensive view of sustainability metrics and analysis. The frontend is built using React, while the backend is built using Python. The integration between the frontend and backend ensures that the dashboard provides real-time data and insights. The machine learning components, including data generation, model training, and evaluation, are crucial for providing accurate and reliable predictions and analyses.
