@@ -11,7 +11,7 @@
       "use": "@vercel/python@3.1.0",
       "config": {
         "maxLambdaSize": "15mb",
-        "runtime": "python3.9",
+        "runtime": "python3.10",
         "includedFiles": [
           "backend/ml/trafficanalysis/traffic_congestion_model.pkl",
           "backend/ml/trafficanalysis/scaler.pkl"
