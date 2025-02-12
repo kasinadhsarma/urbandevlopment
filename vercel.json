@@ -3,14 +3,14 @@
   "env": {
     "NEXT_PUBLIC_MAPBOX_TOKEN": "pk.eyJ1Ijoia2FzaW5hZGhzYXJtYSIsImEiOiJjbTY5NGJkcGMwNWY5Mmpxd2g2MXgxemloIn0.DRcazuU3mvV5Q2HIRXYoOA"
   },
-  "buildCommand": "npm run build",
-  "installCommand": "pip install --upgrade setuptools && pip install -r backend/requirements.txt && npm install",
+  "buildCommand": "pip install -r backend/requirements.txt && npm run build",
+  "installCommand": "npm install",
   "builds": [
     {
       "src": "backend/main.py",
       "use": "@vercel/python",
       "config": {
-        "runtime": "python3.10",
+        "runtime": "python3.9",
         "maxLambdaSize": "15mb",
         "includedFiles": [
           "backend/requirements.txt",
