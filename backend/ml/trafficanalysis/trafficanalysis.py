@@ -78,7 +78,8 @@ class TrafficAnalyzer:
             'congestion_level': float(prediction),
             'feature_importance': feature_importance,
             'congestion_category': self._get_congestion_category(prediction),
-            'hourly_distribution': self.get_hourly_distribution()
+            'hourly_distribution': self.get_hourly_distribution(),
+            'historical_accuracy': self.get_historical_accuracy()
         }
 
     def _get_congestion_category(self, prediction):

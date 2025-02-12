@@ -58,6 +58,8 @@ class TrafficAnalysisResponse(BaseModel):
     congestion_level: float
     feature_importance: Dict[str, float]
     congestion_category: str
+    hourly_distribution: Dict[int, float]
+    historical_accuracy: Dict[str, float]
 
 @app.post("/api/analyze-traffic", response_model=TrafficAnalysisResponse)
 async def analyze_traffic_route(request: TrafficAnalysisRequest):
