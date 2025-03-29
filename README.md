@@ -41,3 +41,8 @@ For detailed technical documentation, please refer to the following files in the
 
 - [Frontend Technical Documentation](docs/frontend.md)
 - [Backend Technical Documentation](docs/backend.md)
+
+## Urban Development AI | [GitHub](https://github.com/kasinadhsarma/urbandevlopment)
+
+- AI-driven analysis and optimization of urban infrastructure and development planning.
+- Uses deep learning models for land-use classification and predictive analytics.
