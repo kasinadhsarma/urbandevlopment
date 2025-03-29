@@ -34,3 +34,15 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Technical Documentation
+
+For detailed technical documentation, please refer to the following files in the `docs/` directory:
+
+- [Frontend Technical Documentation](docs/frontend.md)
+- [Backend Technical Documentation](docs/backend.md)
+
+## Urban Development AI | [GitHub](https://github.com/kasinadhsarma/urbandevlopment)
+
+- AI-driven analysis and optimization of urban infrastructure and development planning.
+- Uses deep learning models for land-use classification and predictive analytics.
